@@ -1,0 +1,23 @@
+# Local analysis artifacts and downloaded dependencies
+.codex_tmp/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.coverage
+
+# Local environment and editor state
+.env
+.env.*
+.idea/
+.vscode/
+
+# Operating-system metadata
+.DS_Store
+Thumbs.db
+Desktop.ini

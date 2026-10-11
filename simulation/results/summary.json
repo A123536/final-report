@@ -1,0 +1,82 @@
+{
+  "model_scope": "2-D symmetric quasi-static geometry, contact and tether-drag model",
+  "design": {
+    "pipe_inner_diameter_mm": [
+      140.0,
+      160.0
+    ],
+    "wheel_diameter_mm": 60.0,
+    "wheel_width_placeholder_mm": 28.0,
+    "link_center_distance_mm": 150.0,
+    "equivalent_free_angle_deg": 0.0,
+    "combined_spring_stiffness_Nm_per_deg": 0.029,
+    "spring_count": 2,
+    "each_spring_stiffness_Nm_per_deg": 0.0145,
+    "mechanical_angle_stops_deg": [
+      90.0,
+      125.0
+    ],
+    "mass_nominal_kg": 1.6,
+    "mass_limit_kg": 1.8,
+    "target_speed_m_per_s": 0.15,
+    "target_distance_m": 10.0,
+    "tether_total_length_m": 15.0
+  },
+  "geometry_range": {
+    "included_angle_deg": [
+      98.8856800059307,
+      118.07510414236292
+    ],
+    "wheelbase_mm": [
+      227.92730350543442,
+      257.2514028844388
+    ],
+    "overall_length_mm": [
+      287.9273035054344,
+      317.25140288443873
+    ],
+    "spring_moment_Nm": [
+      2.86768472017199,
+      3.4241780201285246
+    ],
+    "center_normal_force_N": [
+      50.32630450267432,
+      53.24251656915889
+    ]
+  },
+  "motor": {
+    "rated_torque_each_Nm": 0.2941995,
+    "stall_torque_each_Nm": 1.176798,
+    "rated_current_each_A": 0.65,
+    "stall_current_each_A": 2.4,
+    "external_gear_ratio": 1.6,
+    "external_gear_efficiency_assumed": 0.9,
+    "motor_gear_teeth": 25,
+    "wheel_gear_teeth": 40,
+    "no_load_speed_m_per_s": 0.21598449493429825,
+    "rated_speed_m_per_s": 0.16689710972195776,
+    "continuous_force_two_motors_N": 28.243152000000002,
+    "stall_force_two_motors_N": 112.97260800000001,
+    "wheel_rpm_at_target_speed": 47.74648292756861,
+    "motor_rpm_at_target_speed": 76.39437268410977
+  },
+  "ten_meter_load": {
+    "nominal_resistance_N": 3.5316,
+    "worst_case_resistance_N": 7.298640000000001,
+    "nominal_current_each_A_estimate": 0.22033651909673535,
+    "worst_case_current_each_A_estimate": 0.2953621394665864,
+    "minimum_traction_at_mu_0_15_N": 9.903345675401146,
+    "nominal_minimum_safety_factor_at_mu_0_15": 2.80420933157808,
+    "worst_load_minimum_safety_factor_at_mu_0_15": 1.3568754830216514
+  },
+  "monte_carlo_200k": {
+    "pass_fraction_margin_gt_0": 1.0,
+    "fraction_safety_ge_1_2": 1.0,
+    "fraction_safety_ge_1_5": 0.99995,
+    "safety_factor_p01": 2.03946264109538,
+    "safety_factor_p05": 2.6238803520983174,
+    "safety_factor_median": 5.62427409621479,
+    "safety_factor_p95": 10.617575642014575,
+    "minimum_margin_N": 2.766596457054323
+  }
+}

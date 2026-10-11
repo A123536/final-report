@@ -1,0 +1,73 @@
+{
+  "units": "mm",
+  "pipe_ID_nominal": 150.0,
+  "pipe_ID_range": [
+    140,
+    160
+  ],
+  "wheel_diameter": 60.0,
+  "wheel_width_placeholder": 28.0,
+  "finite_wheel_width_contact_correction_mm": 1.3182519208454124,
+  "link_axis_spacing": 150.0,
+  "nominal_V_angle_deg": 108.75766735931188,
+  "active_wheel_centers": [
+    [
+      -121.93284848225723,
+      0.0,
+      -43.68174807915459
+    ],
+    [
+      121.93284848225723,
+      0.0,
+      -43.68174807915459
+    ]
+  ],
+  "passive_wheel_center": [
+    0.0,
+    0.0,
+    43.68174807915459
+  ],
+  "reserved_bays": {
+    "rear_power_bay": [
+      92,
+      64,
+      30
+    ],
+    "front_control_bay": [
+      92,
+      64,
+      30
+    ],
+    "future_camera_bay": [
+      50,
+      48,
+      32
+    ]
+  },
+  "transverse_envelope_target": 95,
+  "nominal_max_robot_radius_mm": 75.0,
+  "nominal_pipe_radius_mm": 75.0,
+  "cross_section_clearance": {
+    "140": {
+      "wheel_edge_clearance_mm": 0.0,
+      "motor_box_clearance_mm": 13.172608907119923,
+      "half_wheelbase_mm": 128.62570144221937
+    },
+    "150": {
+      "wheel_edge_clearance_mm": 0.0,
+      "motor_box_clearance_mm": 16.086324219611072,
+      "half_wheelbase_mm": 121.93284848225723
+    },
+    "160": {
+      "wheel_edge_clearance_mm": 0.0,
+      "motor_box_clearance_mm": 18.93999148155614,
+      "half_wheelbase_mm": 113.96365175271723
+    }
+  },
+  "notes": [
+    "Mirrored motor placement balances roll moment.",
+    "Power and signal routes are separated across the center hinge.",
+    "Module solids are keep-out envelopes; final hole patterns follow purchased boards.",
+    "Final manufacturing drawings require exact omni-wheel width and spring geometry."
+  ]
+}
