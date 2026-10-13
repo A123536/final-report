@@ -30,4 +30,4 @@
 
 装配体自定义属性记录了管径范围、轮子包络、150 mm 连杆轴距、108.757667° 标称 V 角、90°–125°机械限位、目标质量、速度和行程。
 
-`GenerateSolidWorksConcept.cs` 是可重复生成模型的参数源；`FinalizeSolidWorksAssembly.cs` 用于设置透明度、导出快照、审计组件并保存最终显示状态。两个工具的本地 `.exe` 和 SOLIDWORKS Interop DLL 属于构建产物，不纳入 Git。
+`GenerateSolidWorksConcept.cs` 是可重复生成模型的参数源；`FinalizeSolidWorksAssembly.cs` 用于设置透明度、导出快照、审计组件并保存最终显示状态；`NormalizeHarnessPartNames.cs` 记录首轮线束文件名规范化过程。三个工具的本地 `.exe` 和 SOLIDWORKS Interop DLL 属于构建产物，不纳入 Git。
