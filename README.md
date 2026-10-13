@@ -17,6 +17,7 @@
 cad/
   v_pipe_robot_concept.py       概念级三维包络和图片生成脚本
   outputs/                      GLB、渲染图和模型元数据
+  solidworks/                   SOLIDWORKS 2026 原生装配、零件及生成工具
 design/
   basic_mechanical_scheme.md    机械方案与第二轮仿真结论
   assembly_and_procurement.md   装配、接线和采购建议
@@ -26,6 +27,8 @@ simulation/
 ```
 
 `simulation/results/` 和 `cad/outputs/` 是当前设计基线的一部分，因此纳入版本控制。`.codex_tmp/` 只包含资料提取、中间渲染和临时 Python 依赖，不纳入版本控制。
+
+SOLIDWORKS 主装配体位于 `cad/solidworks/model/V_Pipe_Robot_Concept_ID150.SLDASM`。其 `ID150_NOMINAL` 配置包含 `ROBOT_ONLY` 与 `WITH_PIPE` 两个显示状态；模型仍属于概念包络，不能直接作为加工放行文件。
 
 ## 环境与运行
 
