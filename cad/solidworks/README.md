@@ -20,6 +20,8 @@
 - `model/SOLIDWORKS_ASSEMBLY_AUDIT.txt`：组件清单及显示状态审计。
 - `model/overview_with_pipe.png`：透明管道内的装配效果。
 - `model/overview_robot_only.png`：隐藏管道后的机器人装配效果。
+- `model/V_Pipe_Robot_Concept_ID150_GA.SLDDRW`：A3 总布置工程图，包含 V 型侧向、横向和等轴测视图。
+- `model/general_arrangement.png`：总布置工程图预览。
 
 主装配体默认隐藏管道，方便继续编辑内部结构。在特征树中选择 `Pipe_ID150_OD154_L430` 并执行“显示”即可恢复透明管道。
 
@@ -30,4 +32,4 @@
 
 装配体自定义属性记录了管径范围、轮子包络、150 mm 连杆轴距、108.757667° 标称 V 角、90°–125°机械限位、目标质量、速度和行程。
 
-`GenerateSolidWorksConcept.cs` 是可重复生成模型的参数源；`FinalizeSolidWorksAssembly.cs` 用于设置透明度、导出快照、审计组件并保存最终显示状态；`NormalizeHarnessPartNames.cs` 记录首轮线束文件名规范化过程。三个工具的本地 `.exe` 和 SOLIDWORKS Interop DLL 属于构建产物，不纳入 Git。
+`GenerateSolidWorksConcept.cs` 是可重复生成模型的参数源；`FinalizeSolidWorksAssembly.cs` 用于设置透明度、导出快照、审计组件并保存最终显示状态；`NormalizeHarnessPartNames.cs` 记录首轮线束文件名规范化过程；`CreateGeneralArrangementDrawing.cs` 生成 A3 总布置工程图。工具的本地 `.exe` 和 SOLIDWORKS Interop DLL 属于构建产物，不纳入 Git。
