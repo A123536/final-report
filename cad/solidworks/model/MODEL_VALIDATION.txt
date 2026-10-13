@@ -1,0 +1,11 @@
+V-pipe robot SOLIDWORKS concept baseline
+Pipe ID: 150.000 mm (target range 140-160 mm)
+Wheel: D60.000 x W28.000 mm placeholder
+Link axis spacing: 150.000 mm
+Nominal V angle: 108.757667 deg
+Rear/Front half wheelbase: 121.932848 mm
+Radial wheel-axis offset: 43.681748 mm
+Gear pair: module 1, 25T/40T, center distance 32.500 mm
+Equipment bays: 92 x 64 x 30 mm
+Camera reserve: 50 x 48 x 32 mm
+IMPORTANT: wheel details, spring coil geometry, PCB holes and gear teeth are envelopes pending purchased-part measurements.

@@ -21,3 +21,12 @@ venv/
 .DS_Store
 Thumbs.db
 Desktop.ini
+
+# Local SOLIDWORKS API build products (source and generated CAD stay tracked)
+cad/solidworks/*.exe
+cad/solidworks/SolidWorks.Interop.*.dll
+
+# SOLIDWORKS document lock files while models are open
+~$*.SLDPRT
+~$*.SLDASM
+~$*.SLDDRW
