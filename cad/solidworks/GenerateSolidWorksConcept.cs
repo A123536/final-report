@@ -32,8 +32,6 @@ namespace VPipeRobotSolidWorks
     {
         // All design constants are expressed in millimetres here and converted
         // to metres only when calling the SOLIDWORKS API.
-        private const double PipeId = 150.0;
-        private const double PipeOd = 154.0;       // 2 mm visualization wall
         private const double PipeLength = 430.0;
         private const double PipeCenterX = 25.0;
         private const double WheelDiameter = 60.0;
@@ -47,19 +45,23 @@ namespace VPipeRobotSolidWorks
         private readonly string _asmTemplate;
         private readonly string _root;
         private readonly string _parts;
+        private readonly double _pipeId;
+        private readonly string _pipeTag;
         private readonly Dictionary<string, string> _partFiles = new Dictionary<string, string>();
 
         private static readonly V3 Ex = new V3(1, 0, 0);
         private static readonly V3 Ey = new V3(0, 1, 0);
         private static readonly V3 Ez = new V3(0, 0, 1);
 
-        public Generator(SldWorks sw, string root)
+        public Generator(SldWorks sw, string root, double pipeId)
         {
             _sw = sw;
             _modeler = (Modeler)_sw.GetModeler();
             _math = (MathUtility)_sw.GetMathUtility();
             _root = root;
             _parts = Path.Combine(root, "parts");
+            _pipeId = pipeId;
+            _pipeTag = pipeId.ToString("0", CultureInfo.InvariantCulture);
             Directory.CreateDirectory(_root);
             Directory.CreateDirectory(_parts);
             _partTemplate = @"C:\ProgramData\SOLIDWORKS\SOLIDWORKS 2026\templates\gb_part.prtdot";
@@ -96,6 +98,11 @@ namespace VPipeRobotSolidWorks
         private string CreateBox(string key, double x, double y, double z, double[] color)
         {
             string path = PartPath(key);
+            if (File.Exists(path) && new FileInfo(path).Length > 1024)
+            {
+                _partFiles[key] = path;
+                return path;
+            }
             ModelDoc2 model = NewPart();
             PartDoc part = (PartDoc)model;
             double[] dim = new double[] { 0, 0, -M(z) / 2.0, 0, 0, 1, M(x), M(y), M(z) };
@@ -111,6 +118,11 @@ namespace VPipeRobotSolidWorks
         private string CreateCylinder(string key, double diameter, double length, double[] color)
         {
             string path = PartPath(key);
+            if (File.Exists(path) && new FileInfo(path).Length > 1024)
+            {
+                _partFiles[key] = path;
+                return path;
+            }
             ModelDoc2 model = NewPart();
             PartDoc part = (PartDoc)model;
             double[] dim = new double[] { 0, 0, -M(length) / 2.0, 0, 0, 1, M(diameter) / 2.0, M(length) };
@@ -126,6 +138,11 @@ namespace VPipeRobotSolidWorks
         private string CreateTube(string key, double outerDiameter, double innerDiameter, double length, double[] color)
         {
             string path = PartPath(key);
+            if (File.Exists(path) && new FileInfo(path).Length > 1024)
+            {
+                _partFiles[key] = path;
+                return path;
+            }
             ModelDoc2 model = NewPart();
             PartDoc part = (PartDoc)model;
             double[] outerDim = new double[] { 0, 0, -M(length) / 2.0, 0, 0, 1, M(outerDiameter) / 2.0, M(length) };
@@ -140,6 +157,52 @@ namespace VPipeRobotSolidWorks
             Body2 body = (Body2)results[0];
             if (part.CreateFeatureFromBody3(body, false, (int)swCreateFeatureBodyOpts_e.swCreateFeatureBodyCheck) == null)
                 throw new InvalidOperationException("Tube feature failed for " + key);
+            model.MaterialPropertyValues = color;
+            SaveAndClosePart(model, path);
+            _partFiles[key] = path;
+            return path;
+        }
+
+        private string CreateEquipmentBayShell(string key, double length, double width,
+                                               double height, double wall, double[] color)
+        {
+            string path = PartPath(key);
+            if (File.Exists(path) && new FileInfo(path).Length > 1024)
+            {
+                _partFiles[key] = path;
+                return path;
+            }
+            ModelDoc2 model = NewPart();
+            PartDoc part = (PartDoc)model;
+            double sideHeight = height - wall;
+            double sideZ = -wall / 2.0;
+            double topZ = height / 2.0 - wall / 2.0;
+
+            Func<double, double, double, double, double, double, Body2> box =
+                delegate(double cx, double cy, double cz, double sx, double sy, double sz)
+                {
+                    double[] dim = new double[] {
+                        M(cx), M(cy), M(cz - sz / 2.0), 0, 0, 1,
+                        M(sx), M(sy), M(sz)
+                    };
+                    return _modeler.CreateBodyFromBox3(dim);
+                };
+
+            Body2 shell = box(0, 0, topZ, length, width, wall);
+            Body2 left = box(0, -(width - wall) / 2.0, sideZ, length, wall, sideHeight);
+            Body2 right = box(0, (width - wall) / 2.0, sideZ, length, wall, sideHeight);
+            foreach (Body2 addition in new Body2[] { left, right })
+            {
+                int opError = 0;
+                object[] joined = shell.Operations2((int)swBodyOperationType_e.SWBODYADD,
+                    addition, out opError) as object[];
+                if (joined == null || joined.Length == 0)
+                    throw new InvalidOperationException("Equipment shell Boolean failed for " + key + ", code " + opError);
+                shell = (Body2)joined[0];
+            }
+            if (part.CreateFeatureFromBody3(shell, false,
+                (int)swCreateFeatureBodyOpts_e.swCreateFeatureBodyCheck) == null)
+                throw new InvalidOperationException("Equipment shell feature failed for " + key);
             model.MaterialPropertyValues = color;
             SaveAndClosePart(model, path);
             _partFiles[key] = path;
@@ -161,24 +224,32 @@ namespace VPipeRobotSolidWorks
             double[] camera = Appearance(0.57, 0.31, 0.75, 0.45);
             double[] pipe = Appearance(0.47, 0.69, 0.82, 0.82);
 
-            CreateTube("Pipe_ID150_OD154_L430", PipeOd, PipeId, PipeLength, pipe);
-            CreateCylinder("DrivenWheel_D60_W28", WheelDiameter, WheelWidth, blue);
-            CreateCylinder("PassiveWheel_D60_W28", WheelDiameter, WheelWidth, grey);
-            CreateCylinder("WheelHub_D18_L36", 18, 36, steel);
+            CreateTube("Pipe_ID" + _pipeTag + "_OD" + (_pipeId + 4.0).ToString("0", CultureInfo.InvariantCulture) + "_L430",
+                _pipeId + 4.0, _pipeId, PipeLength, pipe);
+            // The purchased wheel remains a D60 x W28 envelope.  The solid core
+            // is reduced to D26 and the rollers define the D60 contact envelope;
+            // this avoids the impossible full-disk overlap in the first model.
+            CreateTube("DrivenWheelCore_D26_ID18_W20", 26, 18, 20, blue);
+            CreateTube("PassiveWheelCore_D26_ID18_W20", 26, 18, 20, grey);
+            CreateBox("DrivenWheelSpoke_11x4x4", 11, 4, 4, blue);
+            CreateBox("PassiveWheelSpoke_11x4x4", 11, 4, 4, grey);
+            CreateTube("WheelHub_OD18_ID8_L36", 18, 8, 36, steel);
             CreateCylinder("OmniRoller_D6_L8", 6, 8, orange);
             CreateBox("LinkRail_122x7x16", 122, 7, 16, dark);
             CreateCylinder("WheelShaft_D8_L74", 8, 74, steel);
-            CreateCylinder("CenterAxle_D10_L92", 10, 92, steel);
-            CreateTube("BearingEnvelope_22x8x7", 22, 8, 7, dark);
+            CreateCylinder("CenterAxle_D8_L92", 8, 92, steel);
+            CreateTube("Bearing619_8_19x8x6", 19, 8, 6, dark);
             CreateTube("Gear40T_m1_Envelope_D42_ID8_W7", 42, 8, 7, orange);
             CreateTube("Gear25T_m1_Envelope_D27_ID6_W7", 27, 6, 7, orange);
+            CreateCylinder("IdlerShaft_D6_L14", 6, 14, steel);
+            CreateTube("IdlerBearingEnvelope_OD13_ID6_W5", 13, 6, 5, dark);
             CreateCylinder("GearboxEnvelope_D37_L24", 37, 24, steel);
             CreateCylinder("MotorEnvelope_D32p7_L21p7", 32.7, 21.7, steel);
             CreateCylinder("EncoderEnvelope_D33p8_L13p8", 33.8, 13.8, dark);
             CreateTube("TorsionSpringEnvelope_OD38_ID12_W6p4", 38, 12, 6.4, purple);
-            CreateBox("CenterStopTab_12x9x18", 12, 9, 18, dark);
-            CreateCylinder("InsertionLockPin_D4_L84", 4, 84, dark);
-            CreateBox("EquipmentBay_92x64x30", 92, 64, 30, lightBlue);
+            CreateBox("CenterStopTab_12x6x12", 12, 6, 12, dark);
+            CreateCylinder("InsertionLockPin_D4_L40", 4, 40, dark);
+            CreateEquipmentBayShell("EquipmentBayShell_70x60x20_t2", 70, 60, 20, 2, lightBlue);
             CreateBox("Buck24to12_65x42x17", 65, 42, 17, blue);
             CreateBox("FuseTerminal_24x16x12", 24, 16, 12, cyan);
             CreateBox("MC33926_50x30x12", 50, 30, 12, red);
@@ -186,11 +257,9 @@ namespace VPipeRobotSolidWorks
             CreateBox("RS485_25x18x9", 25, 18, 9, cyan);
             CreateBox("FutureCameraBay_50x48x32", 50, 48, 32, camera);
             CreateCylinder("CameraLensEnvelope_D18_L7", 18, 7, dark);
-            CreateCylinder("M3Boss_D3p2_L21", 3.2, 21, dark);
-            CreateCylinder("M3CameraMount_D3p2_L7", 3.2, 7, dark);
             CreateCylinder("M12GlandEnvelope_D14_L15", 14, 15, dark);
             CreateCylinder("ExternalTether_D7_L30", 7, 30, red);
-            CreateBox("CableTieBridge_10x76x5", 10, 76, 5, dark);
+            CreateBox("CableTieBridge_10x60x5", 10, 60, 5, dark);
         }
 
         private MathTransform Transform(V3 localX, V3 localY, V3 localZ, V3 translationMm)
@@ -238,17 +307,27 @@ namespace VPipeRobotSolidWorks
 
         private void AddWheel(AssemblyDoc assembly, V3 center, string prefix, bool driven)
         {
-            string wheelKey = driven ? "DrivenWheel_D60_W28" : "PassiveWheel_D60_W28";
-            AddAxis(assembly, wheelKey, prefix + "_WHEEL_D60_W28", center, Ey);
-            AddAxis(assembly, "WheelHub_D18_L36", prefix + "_HUB_D18", center, Ey);
+            string wheelKey = driven ? "DrivenWheelCore_D26_ID18_W20" : "PassiveWheelCore_D26_ID18_W20";
+            AddAxis(assembly, wheelKey, prefix + "_WHEEL_CORE_D26", center, Ey);
+            AddAxis(assembly, "WheelHub_OD18_ID8_L36", prefix + "_HUB_OD18_ID8", center, Ey);
+
+            string spokeKey = driven ? "DrivenWheelSpoke_11x4x4" : "PassiveWheelSpoke_11x4x4";
+            for (int i = 0; i < 6; ++i)
+            {
+                double angle = 2.0 * Math.PI * i / 6.0;
+                V3 radial = new V3(Math.Cos(angle), 0, Math.Sin(angle));
+                V3 tangent = V3.Cross(radial, Ey).Unit();
+                Add(assembly, spokeKey, prefix + "_SPOKE_" + (i + 1).ToString("00"),
+                    center + radial * 18.5, radial, Ey, tangent);
+            }
 
             // Stylized roller envelopes identify the purchased component as an omni wheel.
             for (int i = 0; i < 12; ++i)
             {
                 double angle = 2.0 * Math.PI * i / 12.0;
-                V3 roller = center + new V3(25.0 * Math.Cos(angle),
-                    (i % 2 == 0 ? 1.0 : -1.0) * (WheelWidth / 2.0 - 3.2),
-                    25.0 * Math.Sin(angle));
+                V3 roller = center + new V3(27.0 * Math.Cos(angle),
+                    (i % 2 == 0 ? 1.0 : -1.0) * (WheelWidth / 2.0 - 4.0),
+                    27.0 * Math.Sin(angle));
                 AddAxis(assembly, "OmniRoller_D6_L8", prefix + "_ROLLER_" + (i + 1).ToString("00"), roller, Ey);
             }
         }
@@ -257,18 +336,23 @@ namespace VPipeRobotSolidWorks
                                     int side, string prefix)
         {
             V3 u = towardCenter.Unit();
-            V3 motorAxis = active + u * 32.5;
-            double gearY = -side * 20.0;
+            V3 idlerAxis = active + u * 32.5;
+            V3 motorAxis = active + u * 57.5;
+            double gearY = -side * 31.0;
 
             AddAxis(assembly, "WheelShaft_D8_L74", prefix + "_WHEEL_SHAFT_D8", active, Ey);
-            AddAxis(assembly, "BearingEnvelope_22x8x7", prefix + "_BEARING_LEFT", active + new V3(0, -23, 0), Ey);
-            AddAxis(assembly, "BearingEnvelope_22x8x7", prefix + "_BEARING_RIGHT", active + new V3(0, 23, 0), Ey);
+            AddAxis(assembly, "Bearing619_8_19x8x6", prefix + "_BEARING_LEFT", active + new V3(0, -22, 0), Ey);
+            AddAxis(assembly, "Bearing619_8_19x8x6", prefix + "_BEARING_RIGHT", active + new V3(0, 22, 0), Ey);
             AddAxis(assembly, "Gear40T_m1_Envelope_D42_ID8_W7", prefix + "_GEAR_40T_m1", active + new V3(0, gearY, 0), Ey);
-            AddAxis(assembly, "Gear25T_m1_Envelope_D27_ID6_W7", prefix + "_GEAR_25T_m1", motorAxis + new V3(0, gearY, 0), Ey);
+            AddAxis(assembly, "Gear25T_m1_Envelope_D27_ID6_W7", prefix + "_IDLER_GEAR_25T_m1", idlerAxis + new V3(0, gearY, 0), Ey);
+            AddAxis(assembly, "IdlerShaft_D6_L14", prefix + "_IDLER_SHAFT_D6", idlerAxis + new V3(0, gearY, 0), Ey);
+            AddAxis(assembly, "IdlerBearingEnvelope_OD13_ID6_W5", prefix + "_IDLER_BEARING",
+                idlerAxis + new V3(0, gearY + side * 7.5, 0), Ey);
+            AddAxis(assembly, "Gear25T_m1_Envelope_D27_ID6_W7", prefix + "_MOTOR_GEAR_25T_m1", motorAxis + new V3(0, gearY, 0), Ey);
 
-            double gearboxY = gearY + side * 15.0;
-            double motorY = gearY + side * (24.0 + 21.7 / 2.0);
-            double encoderY = gearY + side * (24.0 + 21.7 + 13.8 / 2.0);
+            double gearboxY = gearY + side * (3.5 + 1.0 + 24.0 / 2.0);
+            double motorY = gearY + side * (3.5 + 1.0 + 24.0 + 21.7 / 2.0);
+            double encoderY = gearY + side * (3.5 + 1.0 + 24.0 + 21.7 + 13.8 / 2.0);
             AddAxis(assembly, "GearboxEnvelope_D37_L24", prefix + "_JGB37_GEARBOX", motorAxis + new V3(0, gearboxY, 0), Ey);
             AddAxis(assembly, "MotorEnvelope_D32p7_L21p7", prefix + "_JGB37_MOTOR", motorAxis + new V3(0, motorY, 0), Ey);
             AddAxis(assembly, "EncoderEnvelope_D33p8_L13p8", prefix + "_ENCODER", motorAxis + new V3(0, encoderY, 0), Ey);
@@ -276,20 +360,10 @@ namespace VPipeRobotSolidWorks
 
         private void AddBoard(AssemblyDoc assembly, string key, string name, V3 podCenter,
                               V3 u, V3 normal, double alongOffset, double yOffset,
-                              double length, double width, double height)
+                              double normalOffset, double length, double width, double height)
         {
-            V3 boardCenter = podCenter + u * alongOffset + new V3(0, yOffset, 0);
+            V3 boardCenter = podCenter + u * alongOffset + new V3(0, yOffset, 0) + normal * normalOffset;
             Add(assembly, key, name, boardCenter, u, Ey, normal);
-            for (int sx = -1; sx <= 1; sx += 2)
-            {
-                for (int sy = -1; sy <= 1; sy += 2)
-                {
-                    V3 bossCenter = boardCenter + u * (sx * (length / 2.0 - 5.0))
-                        + new V3(0, sy * (width / 2.0 - 4.0), 0);
-                    AddAxis(assembly, "M3Boss_D3p2_L21", name + "_M3_BOSS_" + sx + "_" + sy,
-                        bossCenter, normal);
-                }
-            }
         }
 
         private void AddCableSegment(AssemblyDoc assembly, V3 p0, V3 p1,
@@ -306,6 +380,7 @@ namespace VPipeRobotSolidWorks
             _sw.OpenDoc6(_partFiles[key], (int)swDocumentTypes_e.swDocPART,
                 (int)swOpenDocOptions_e.swOpenDocOptions_Silent, "", ref e, ref w);
             AddAxis(assembly, key, prefix + "_SEGMENT_" + (index + 1), (p0 + p1) * 0.5, vector);
+            _sw.CloseDoc(Path.GetFileName(_partFiles[key]));
         }
 
         private string BuildAssembly()
@@ -322,7 +397,7 @@ namespace VPipeRobotSolidWorks
             if (model == null) throw new InvalidOperationException("Could not create assembly document.");
             AssemblyDoc assembly = (AssemblyDoc)model;
 
-            double pipeRadius = PipeId / 2.0;
+            double pipeRadius = _pipeId / 2.0;
             double radialOffset = Math.Sqrt(pipeRadius * pipeRadius - Math.Pow(WheelWidth / 2.0, 2.0))
                 - WheelDiameter / 2.0;
             double radialSpan = 2.0 * radialOffset;
@@ -334,7 +409,8 @@ namespace VPipeRobotSolidWorks
             V3 front = new V3(halfWheelbase, 0, -radialOffset);
 
             // Transparent pipe shell, local cylinder Z axis mapped to global X.
-            Add(assembly, "Pipe_ID150_OD154_L430", "PIPE_ID150_OD154_L430_CONCEPT",
+            string pipeKey = "Pipe_ID" + _pipeTag + "_OD" + (_pipeId + 4.0).ToString("0", CultureInfo.InvariantCulture) + "_L430";
+            Add(assembly, pipeKey, "PIPE_ID" + _pipeTag + "_CONCEPT",
                 new V3(PipeCenterX, 0, 0), Ey, Ez, Ex);
 
             AddWheel(assembly, rear, "REAR_DRIVEN", true);
@@ -348,85 +424,88 @@ namespace VPipeRobotSolidWorks
 
             V3 rearRailCenter = (rear + center) * 0.5;
             V3 frontRailCenter = (center + front) * 0.5;
-            Add(assembly, "LinkRail_122x7x16", "REAR_LINK_RAIL_L", rearRailCenter + new V3(0, -35, 0), rearU, Ey, rearN);
-            Add(assembly, "LinkRail_122x7x16", "REAR_LINK_RAIL_R", rearRailCenter + new V3(0, 35, 0), rearU, Ey, rearN);
-            Add(assembly, "LinkRail_122x7x16", "FRONT_LINK_RAIL_L", frontRailCenter + new V3(0, -35, 0), frontU, Ey, frontN);
-            Add(assembly, "LinkRail_122x7x16", "FRONT_LINK_RAIL_R", frontRailCenter + new V3(0, 35, 0), frontU, Ey, frontN);
+            Add(assembly, "LinkRail_122x7x16", "REAR_LINK_RAIL_L", rearRailCenter + new V3(0, -43, 0), rearU, Ey, rearN);
+            Add(assembly, "LinkRail_122x7x16", "REAR_LINK_RAIL_R", rearRailCenter + new V3(0, 43, 0), rearU, Ey, rearN);
+            Add(assembly, "LinkRail_122x7x16", "FRONT_LINK_RAIL_L", frontRailCenter + new V3(0, -43, 0), frontU, Ey, frontN);
+            Add(assembly, "LinkRail_122x7x16", "FRONT_LINK_RAIL_R", frontRailCenter + new V3(0, 43, 0), frontU, Ey, frontN);
 
-            AddAxis(assembly, "CenterAxle_D10_L92", "CENTER_HINGE_AXLE_D10", center, Ey);
-            AddAxis(assembly, "BearingEnvelope_22x8x7", "CENTER_BEARING_LEFT", center + new V3(0, -28, 0), Ey);
-            AddAxis(assembly, "BearingEnvelope_22x8x7", "CENTER_BEARING_RIGHT", center + new V3(0, 28, 0), Ey);
-            AddAxis(assembly, "TorsionSpringEnvelope_OD38_ID12_W6p4", "TORSION_SPRING_LEFT_ENVELOPE_NOT_FINAL", center + new V3(0, -28, 0), Ey);
-            AddAxis(assembly, "TorsionSpringEnvelope_OD38_ID12_W6p4", "TORSION_SPRING_RIGHT_ENVELOPE_NOT_FINAL", center + new V3(0, 28, 0), Ey);
-            Add(assembly, "CenterStopTab_12x9x18", "CENTER_STOP_TAB_REAR", center + new V3(-18, 0, -18), Ex, Ey, Ez);
-            Add(assembly, "CenterStopTab_12x9x18", "CENTER_STOP_TAB_FRONT", center + new V3(18, 0, -18), Ex, Ey, Ez);
-            AddAxis(assembly, "InsertionLockPin_D4_L84", "INSERTION_LOCK_PIN_D4", center + new V3(-15, 0, -13), Ey);
+            AddAxis(assembly, "CenterAxle_D8_L92", "CENTER_HINGE_AXLE_D8", center, Ey);
+            AddAxis(assembly, "Bearing619_8_19x8x6", "CENTER_BEARING_LEFT", center + new V3(0, -21, 0), Ey);
+            AddAxis(assembly, "Bearing619_8_19x8x6", "CENTER_BEARING_RIGHT", center + new V3(0, 21, 0), Ey);
+            AddAxis(assembly, "TorsionSpringEnvelope_OD38_ID12_W6p4", "TORSION_SPRING_LEFT_ENVELOPE_NOT_FINAL", center + new V3(0, -32, 0), Ey);
+            AddAxis(assembly, "TorsionSpringEnvelope_OD38_ID12_W6p4", "TORSION_SPRING_RIGHT_ENVELOPE_NOT_FINAL", center + new V3(0, 32, 0), Ey);
+            Add(assembly, "CenterStopTab_12x6x12", "CENTER_STOP_TAB_REAR", center + new V3(-18, -43, -18), Ex, Ey, Ez);
+            Add(assembly, "CenterStopTab_12x6x12", "CENTER_STOP_TAB_FRONT", center + new V3(18, 43, -18), Ex, Ey, Ez);
+            AddAxis(assembly, "InsertionLockPin_D4_L40", "INSERTION_LOCK_PIN_D4", center + new V3(-18, -43, -18), Ey);
 
             AddDriveModule(assembly, rear, center - rear, -1, "REAR_DRIVE");
             AddDriveModule(assembly, front, center - front, 1, "FRONT_DRIVE");
 
             V3 rearInward = (center - rear).Unit();
             V3 rearPodNormal = V3.Cross(rearInward, Ey).Unit();
-            V3 rearPod = rear + (center - rear) * 0.53 + rearPodNormal * 1.0;
-            Add(assembly, "EquipmentBay_92x64x30", "REAR_POWER_BAY_92x64x30", rearPod, rearInward, Ey, rearPodNormal);
+            V3 rearPod = rear + rearInward * 85.0 + rearPodNormal * 30.0;
+            Add(assembly, "EquipmentBayShell_70x60x20_t2", "REAR_POWER_BAY_SHELL_70x60x20", rearPod, rearInward, Ey, rearPodNormal);
             AddBoard(assembly, "Buck24to12_65x42x17", "BUCK_24V_TO_12V_ENVELOPE", rearPod,
-                rearInward, rearPodNormal, -7, 0, 65, 42, 17);
-            AddBoard(assembly, "FuseTerminal_24x16x12", "FUSE_TERMINAL_ENVELOPE", rearPod,
-                rearInward, rearPodNormal, 32, 0, 24, 16, 12);
+                rearInward, rearPodNormal, 0, 0, -1.0, 65, 42, 17);
+            Add(assembly, "FuseTerminal_24x16x12", "FUSE_TERMINAL_EXTERNAL",
+                rearPod + rearInward * 22 + new V3(0, 38, 0) - rearPodNormal * 1.0,
+                rearInward, Ey, rearPodNormal);
 
             V3 frontInward = (center - front).Unit();
-            V3 frontPodNormal = V3.Cross(frontInward, Ey).Unit();
-            V3 frontPod = front + (center - front) * 0.53 + frontPodNormal * 1.0;
-            Add(assembly, "EquipmentBay_92x64x30", "FRONT_CONTROL_BAY_92x64x30", frontPod, frontInward, Ey, frontPodNormal);
+            V3 frontPodNormal = V3.Cross(frontInward, Ey).Unit() * -1.0;
+            V3 frontPod = front + frontInward * 85.0 + frontPodNormal * 30.0;
+            Add(assembly, "EquipmentBayShell_70x60x20_t2", "FRONT_CONTROL_BAY_SHELL_70x60x20", frontPod, frontInward, Ey, frontPodNormal);
             AddBoard(assembly, "MC33926_50x30x12", "DUAL_MC33926_ENVELOPE", frontPod,
-                frontInward, frontPodNormal, -14, -16, 50, 30, 12);
+                frontInward, frontPodNormal, -8, -13, 0, 50, 30, 12);
             AddBoard(assembly, "STM32F411_53x22x10", "STM32F411_ENVELOPE", frontPod,
-                frontInward, frontPodNormal, 13, 18, 53, 22, 10);
-            AddBoard(assembly, "RS485_25x18x9", "RS485_MAX3485_ENVELOPE", frontPod,
-                frontInward, frontPodNormal, 33, -18, 25, 18, 9);
+                frontInward, frontPodNormal, -8, 15, 0, 53, 22, 10);
+            Add(assembly, "RS485_25x18x9", "RS485_MAX3485_ROTATED", frontPod + frontInward * 26,
+                Ey, frontInward * -1.0, frontPodNormal);
 
             V3 cameraCenter = new V3(175, 0, 0);
             Add(assembly, "FutureCameraBay_50x48x32", "FUTURE_CAMERA_BAY_50x48x32", cameraCenter, Ex, Ey, Ez);
             AddAxis(assembly, "CameraLensEnvelope_D18_L7", "CAMERA_LENS_PORT_D18", cameraCenter + new V3(28.5, 0, 0), Ex);
-            for (int sy = -1; sy <= 1; sy += 2)
-            {
-                for (int sz = -1; sz <= 1; sz += 2)
-                {
-                    AddAxis(assembly, "M3CameraMount_D3p2_L7", "CAMERA_M3_MOUNT_" + sy + "_" + sz,
-                        cameraCenter + new V3(-18.5, sy * 18, sz * 10), Ex);
-                }
-            }
 
             V3 tetherEntry = new V3(-171, 0, -12);
             AddAxis(assembly, "M12GlandEnvelope_D14_L15", "M12_CABLE_GLAND_ENVELOPE", tetherEntry + new V3(-7.5, 0, 0), Ex);
             AddAxis(assembly, "ExternalTether_D7_L30", "EXTERNAL_TETHER_ENVELOPE", tetherEntry + new V3(-15, 0, 0), Ex);
 
             V3[] bridges = new V3[] {
-                rearPod - rearInward * 38, rearPod + rearInward * 38,
-                frontPod - frontInward * 38, frontPod + frontInward * 38
+                rearPod - rearInward * 24 + rearPodNormal * 12.5,
+                rearPod + rearInward * 24 + rearPodNormal * 12.5,
+                frontPod - frontInward * 24 + frontPodNormal * 12.5,
+                frontPod + frontInward * 24 + frontPodNormal * 12.5
             };
             for (int i = 0; i < bridges.Length; ++i)
             {
                 V3 u = i < 2 ? rearInward : frontInward;
                 V3 n = V3.Cross(u, Ey).Unit();
-                Add(assembly, "CableTieBridge_10x76x5", "CABLE_TIE_BRIDGE_" + (i + 1), bridges[i], u, Ey, n);
+                Add(assembly, "CableTieBridge_10x60x5", "CABLE_TIE_BRIDGE_" + (i + 1), bridges[i], u, Ey, n);
             }
 
             double[] powerColor = Appearance(0.86, 0.18, 0.18, 0.0);
             double[] signalColor = Appearance(0.16, 0.69, 0.37, 0.0);
+            V3 frontMotorBypass = front + frontInward * 57.5 + frontPodNormal * 25.0;
+            V3 frontWheelBypass = front + frontPodNormal * 35.0;
             V3[] powerPoints = new V3[] {
                 tetherEntry,
-                rearPod + new V3(0, -18, 0),
-                center + new V3(0, -18, -21),
-                frontPod + new V3(0, -18, 0),
-                cameraCenter + new V3(-25, -18, 0)
+                new V3(-160, -37, -12),
+                rearPod + new V3(0, -37, 0),
+                center + new V3(0, -37, -32),
+                frontPod + new V3(0, -37, 0),
+                frontMotorBypass + new V3(0, -37, 0),
+                frontWheelBypass + new V3(0, -37, 0),
+                cameraCenter + new V3(-25, -22, 0)
             };
             V3[] signalPoints = new V3[] {
                 tetherEntry + new V3(0, 10, 0),
-                rearPod + new V3(0, 18, 0),
-                center + new V3(0, 18, -12),
-                frontPod + new V3(0, 18, 0),
-                cameraCenter + new V3(-25, 18, 0)
+                new V3(-160, 37, -12),
+                rearPod + new V3(0, 37, 0),
+                center + new V3(0, 37, -32),
+                frontPod + new V3(0, 37, 0),
+                frontMotorBypass + new V3(0, 37, 0),
+                frontWheelBypass + new V3(0, 37, 0),
+                cameraCenter + new V3(-25, 22, 0)
             };
             for (int i = 0; i < powerPoints.Length - 1; ++i)
                 AddCableSegment(assembly, powerPoints[i], powerPoints[i + 1], 4.4, "POWER_HARNESS", i, powerColor);
@@ -438,21 +517,21 @@ namespace VPipeRobotSolidWorks
             model.ShowNamedView2("*Isometric", (int)swStandardViews_e.swIsometricView);
             model.ViewZoomtofit2();
 
-            string assemblyPath = Path.Combine(_root, "V_Pipe_Robot_Concept_ID150.SLDASM");
+            string assemblyPath = Path.Combine(_root, "V_Pipe_Robot_Concept_ID" + _pipeTag + ".SLDASM");
             int result = model.SaveAs3(assemblyPath, 0, (int)swSaveAsOptions_e.swSaveAsOptions_Silent);
             if (result != 0) throw new InvalidOperationException("Assembly save failed, code " + result);
 
-            string report = Path.Combine(_root, "MODEL_VALIDATION.txt");
+            string report = Path.Combine(_root, "MODEL_VALIDATION_ID" + _pipeTag + ".txt");
             File.WriteAllText(report,
-                "V-pipe robot SOLIDWORKS concept baseline\r\n" +
-                "Pipe ID: 150.000 mm (target range 140-160 mm)\r\n" +
+                "V-pipe robot SOLIDWORKS revised interference-free concept\r\n" +
+                "Pipe ID: " + _pipeId.ToString("F3", CultureInfo.InvariantCulture) + " mm (target range 140-160 mm)\r\n" +
                 "Wheel: D60.000 x W28.000 mm placeholder\r\n" +
                 "Link axis spacing: 150.000 mm\r\n" +
                 "Nominal V angle: " + vAngle.ToString("F6", CultureInfo.InvariantCulture) + " deg\r\n" +
                 "Rear/Front half wheelbase: " + halfWheelbase.ToString("F6", CultureInfo.InvariantCulture) + " mm\r\n" +
                 "Radial wheel-axis offset: " + radialOffset.ToString("F6", CultureInfo.InvariantCulture) + " mm\r\n" +
-                "Gear pair: module 1, 25T/40T, center distance 32.500 mm\r\n" +
-                "Equipment bays: 92 x 64 x 30 mm\r\n" +
+                "Gear train: module 1, 25T motor / 25T idler / 40T wheel; overall ratio 1.600\r\n" +
+                "Equipment bay shells: 70 x 60 x 20 mm, open-bottom, 2 mm wall\r\n" +
                 "Camera reserve: 50 x 48 x 32 mm\r\n" +
                 "IMPORTANT: wheel details, spring coil geometry, PCB holes and gear teeth are envelopes pending purchased-part measurements.\r\n");
             return assemblyPath;
@@ -476,7 +555,10 @@ namespace VPipeRobotSolidWorks
                     Path.GetFullPath(Path.Combine(System.Environment.CurrentDirectory, "cad", "solidworks", "model"));
                 SldWorks sw = (SldWorks)Marshal.GetActiveObject("SldWorks.Application");
                 sw.Visible = true;
-                Generator generator = new Generator(sw, output);
+                double pipeId = args.Length > 1 ? double.Parse(args[1], CultureInfo.InvariantCulture) : 150.0;
+                if (pipeId < 140.0 || pipeId > 160.0)
+                    throw new ArgumentOutOfRangeException("pipeId", "Pipe ID must remain inside the 140-160 mm design range.");
+                Generator generator = new Generator(sw, output, pipeId);
                 string assembly = generator.Run();
                 Console.WriteLine("CREATED=" + assembly);
                 return 0;

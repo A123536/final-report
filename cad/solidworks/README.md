@@ -6,7 +6,7 @@
 
 - φ60×28 mm 全向轮及滚子；
 - 扭簧线圈和弹簧腿；
-- 模数 1、25/40 齿齿形；
+- 模数 1 的 25T 电机齿轮、25T 惰轮和 40T 轮轴齿轮齿形；
 - 电机、板卡及安装孔；
 - 透明管道采用 2 mm 可视化壁厚。
 
@@ -14,10 +14,12 @@
 
 ## 当前交付物
 
-- `model/V_Pipe_Robot_Concept_ID150.SLDASM`：主装配体，共 118 个顶层组件。
+- `model/V_Pipe_Robot_Concept_ID150.SLDASM`：主装配体，共124个顶层组件、46个唯一引用零件。
 - `model/parts/*.SLDPRT`：独立原生零件和器件包络。
 - `model/MODEL_VALIDATION.txt`：关键几何参数检查记录。
 - `model/SOLIDWORKS_ASSEMBLY_AUDIT.txt`：组件清单及显示状态审计。
+- `model/INTERFERENCE_VALIDATION.md`：140/150/160 mm 实体干涉、管壁包络和关闭提示验证记录。
+- `model/REFERENCED_PARTS_ID150.txt`：标称装配实际引用的零件清单。
 - `model/overview_with_pipe.png`：透明管道内的装配效果。
 - `model/overview_robot_only.png`：隐藏管道后的机器人装配效果。
 - `model/V_Pipe_Robot_Concept_ID150_GA.SLDDRW`：A3 总布置工程图，包含 V 型侧向、横向和等轴测视图。
@@ -32,4 +34,4 @@
 
 装配体自定义属性记录了管径范围、轮子包络、150 mm 连杆轴距、108.757667° 标称 V 角、90°–125°机械限位、目标质量、速度和行程。
 
-`GenerateSolidWorksConcept.cs` 是可重复生成模型的参数源；`FinalizeSolidWorksAssembly.cs` 用于设置透明度、导出快照、审计组件并保存最终显示状态；`NormalizeHarnessPartNames.cs` 记录首轮线束文件名规范化过程；`CreateGeneralArrangementDrawing.cs` 生成 A3 总布置工程图。工具的本地 `.exe` 和 SOLIDWORKS Interop DLL 属于构建产物，不纳入 Git。
+`GenerateSolidWorksConcept.cs` 是可重复生成 140–160 mm 姿态的参数源；`FinalizeSolidWorksAssembly.cs` 用于设置透明度、导出快照、审计组件并保存最终显示状态；`CreateGeneralArrangementDrawing.cs` 生成 A3 总布置工程图。`AuditSolidWorksInterferences.cs` 以只读方式执行实体干涉检查并主动关闭文档；`CheckSolidWorksCleanClose.cs` 验证普通打开后所有文档的 `SaveFlag` 均保持为假。工具的本地 `.exe` 和 SOLIDWORKS Interop DLL 属于构建产物，不纳入 Git。

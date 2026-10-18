@@ -7,7 +7,7 @@
 - 三只直径 `60 mm` 的全向轮，前后轮主动驱动，中心轮被动压壁。
 - 两根轴间距 `150 mm` 的连杆构成 V 型机构，中心关节使用左右镜像扭簧。
 - 机械限位为 `90°–125°`，目标整机质量 `1.6 kg`，上限 `1.8 kg`。
-- 两台 JGB37-520 编码减速电机通过模数 1、25/40 齿轮驱动。
+- 两台 JGB37-520 编码减速电机通过模数 1 的 25T 电机齿轮、25T 惰轮和 40T 轮轴齿轮驱动，总减速比为 1.6:1。
 - 目标巡航速度 `0.15 m/s`，目标管内行程 `10 m`，拖线总长 `15 m`。
 - 计划采用地面端 24 V 供电、机器人端 12 V/5 V 降压、STM32F411 控制和 RS-485 通信。
 
@@ -28,7 +28,7 @@ simulation/
 
 `simulation/results/` 和 `cad/outputs/` 是当前设计基线的一部分，因此纳入版本控制。`.codex_tmp/` 只包含资料提取、中间渲染和临时 Python 依赖，不纳入版本控制。
 
-SOLIDWORKS 主装配体位于 `cad/solidworks/model/V_Pipe_Robot_Concept_ID150.SLDASM`。其 `ID150_NOMINAL` 配置包含 `ROBOT_ONLY` 与 `WITH_PIPE` 两个显示状态；模型仍属于概念包络，不能直接作为加工放行文件。
+SOLIDWORKS 主装配体位于 `cad/solidworks/model/V_Pipe_Robot_Concept_ID150.SLDASM`。其 `ID150_NOMINAL` 配置包含 `ROBOT_ONLY` 与 `WITH_PIPE` 两个显示状态；修订模型已完成 140、150、160 mm 三种姿态的实体干涉检查，非预期干涉为零，但仍属于概念包络，不能直接作为加工放行文件。
 
 ## 环境与运行
 

@@ -44,8 +44,9 @@ MOTOR_STALL_TORQUE = 12.0 * 0.0980665  # kgf.cm -> N.m
 MOTOR_NO_LOAD_CURRENT = 0.15  # A
 MOTOR_RATED_CURRENT = 0.65  # A
 MOTOR_STALL_CURRENT = 2.40  # A
-EXTERNAL_GEAR_RATIO = 40.0 / 25.0  # motor gear : wheel gear = 25T : 40T
-EXTERNAL_GEAR_EFFICIENCY = 0.90
+EXTERNAL_GEAR_RATIO = 40.0 / 25.0  # 25T motor -> 25T idler -> 40T wheel; idler cancels in ratio
+GEAR_MESH_COUNT = 2
+EXTERNAL_GEAR_EFFICIENCY = 0.90  # conservative total efficiency across both external meshes
 
 # Tether and motion targets
 TARGET_DISTANCE = 10.0  # m inside the pipe
@@ -240,7 +241,9 @@ summary = {
         "external_gear_ratio": EXTERNAL_GEAR_RATIO,
         "external_gear_efficiency_assumed": EXTERNAL_GEAR_EFFICIENCY,
         "motor_gear_teeth": 25,
+        "idler_gear_teeth": 25,
         "wheel_gear_teeth": 40,
+        "external_gear_mesh_count": GEAR_MESH_COUNT,
         "no_load_speed_m_per_s": no_load_speed,
         "rated_speed_m_per_s": rated_speed,
         "continuous_force_two_motors_N": motor_continuous_force,

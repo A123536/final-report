@@ -45,7 +45,20 @@ namespace VPipeRobotSolidWorks
             try
             {
                 SldWorks sw = (SldWorks)Marshal.GetActiveObject("SldWorks.Application");
-                ModelDoc2 model = (ModelDoc2)sw.ActiveDoc;
+                ModelDoc2 model;
+                if (args.Length > 0)
+                {
+                    int openError = 0, openWarning = 0;
+                    model = sw.OpenDoc6(Path.GetFullPath(args[0]),
+                        (int)swDocumentTypes_e.swDocASSEMBLY,
+                        (int)swOpenDocOptions_e.swOpenDocOptions_Silent,
+                        "", ref openError, ref openWarning);
+                    if (model == null) throw new InvalidOperationException("Assembly open failed: " + openError);
+                }
+                else
+                {
+                    model = (ModelDoc2)sw.ActiveDoc;
+                }
                 if (model == null || model.GetType() != (int)swDocumentTypes_e.swDocASSEMBLY)
                     throw new InvalidOperationException("Open the V-pipe robot assembly before running this utility.");
 
@@ -69,7 +82,7 @@ namespace VPipeRobotSolidWorks
                         pipe = component;
                         component.MaterialPropertyValues = Appearance(0.47, 0.69, 0.82, 0.88);
                     }
-                    else if (name.IndexOf("EquipmentBay_92x64x30", StringComparison.OrdinalIgnoreCase) >= 0)
+                    else if (name.IndexOf("EquipmentBayShell_70x60x20", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         component.MaterialPropertyValues = Appearance(0.52, 0.66, 0.80, 0.60);
                     }
@@ -103,13 +116,16 @@ namespace VPipeRobotSolidWorks
 
                 CustomPropertyManager properties = model.Extension.get_CustomPropertyManager("");
                 SetText(properties, "Project", "V-shaped in-pipe inspection robot");
-                SetText(properties, "Model status", "Concept packaging model - not manufacturing release");
+                SetText(properties, "Model status", "Revised interference-checked concept - not manufacturing release");
                 SetText(properties, "Pipe ID range", "140-160 mm");
                 SetText(properties, "Nominal pipe ID", "150 mm");
-                SetText(properties, "Wheel envelope", "D60 x W28 mm placeholder");
+                SetText(properties, "Wheel envelope", "D60 x W28 mm; D26 core and roller envelopes");
                 SetText(properties, "Link axis spacing", "150 mm");
                 SetText(properties, "Nominal V angle", "108.757667 deg");
                 SetText(properties, "Mechanical stops", "90-125 deg");
+                SetText(properties, "Gear train", "module 1: 25T motor / 25T idler / 40T wheel; ratio 1.6");
+                SetText(properties, "Equipment bays", "70 x 60 x 20 mm open-bottom shells, 2 mm wall");
+                SetText(properties, "Interference verification", "140/150/160 mm: zero unintended solid interference");
                 SetText(properties, "Target mass", "1.6 kg; maximum 1.8 kg");
                 SetText(properties, "Target speed", "0.15 m/s");
                 SetText(properties, "Target travel", "10 m with 15 m tether");
