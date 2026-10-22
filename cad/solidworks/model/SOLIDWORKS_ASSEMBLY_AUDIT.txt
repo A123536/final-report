@@ -1,8 +1,8 @@
-Assembly: cad\solidworks\model\V_Pipe_Robot_Concept_ID150.SLDASM
+Assembly: C:\Users\Lenovo\Documents\ChatGPT\final_project\cad\solidworks\model\V_Pipe_Robot_Concept_ID150.SLDASM
 Configuration: ID150_NOMINAL
 Display states: ROBOT_ONLY, WITH_PIPE
-Top-level component count: 124
-Hidden before finalization: 0
+Top-level component count: 127
+Hidden before finalization: 1
 Default saved state: pipe hidden; robot visible
 Pipe display override: transparency 0.88
 
@@ -17,10 +17,14 @@ CableTieBridge_10x60x5-1
 CableTieBridge_10x60x5-2
 CableTieBridge_10x60x5-3
 CableTieBridge_10x60x5-4
+CameraHousing_Body_50x48x32_t2-1
+CameraHousing_FrontBezel_48x32x2p4_D19p5-1
 CameraLensEnvelope_D18_L7-1
 CenterAxle_D8_L92-1
 CenterStopTab_12x6x12-1
 CenterStopTab_12x6x12-2
+ControlBay_BasePlate_72x62x2p4-1
+ControlBay_TopCover_72x62x22_t2-1
 DrivenWheelCore_D26_ID18_W20-1
 DrivenWheelCore_D26_ID18_W20-2
 DrivenWheelSpoke_11x4x4-1
@@ -37,11 +41,8 @@ DrivenWheelSpoke_11x4x4-8
 DrivenWheelSpoke_11x4x4-9
 EncoderEnvelope_D33p8_L13p8-1
 EncoderEnvelope_D33p8_L13p8-2
-EquipmentBayShell_70x60x20_t2-1
-EquipmentBayShell_70x60x20_t2-2
 ExternalTether_D7_L30-1
 FuseTerminal_24x16x12-1
-FutureCameraBay_50x48x32-1
 Gear25T_m1_Envelope_D27_ID6_W7-1
 Gear25T_m1_Envelope_D27_ID6_W7-2
 Gear25T_m1_Envelope_D27_ID6_W7-3
@@ -107,21 +108,23 @@ PassiveWheelSpoke_11x4x4-4
 PassiveWheelSpoke_11x4x4-5
 PassiveWheelSpoke_11x4x4-6
 Pipe_ID150_OD154_L430-1
+PowerBay_BasePlate_72x62x2p4-1
+PowerBay_TopCover_72x62x22_t2-1
 POWER_HARNESS_D4p4_L22p7_6-1
-POWER_HARNESS_D4p4_L28p0_4-1
+POWER_HARNESS_D4p4_L28p6_4-1
 POWER_HARNESS_D4p4_L38p6_0-1
 POWER_HARNESS_D4p4_L58p4_5-1
-POWER_HARNESS_D4p4_L72p7_2-1
-POWER_HARNESS_D4p4_L72p7_3-1
-POWER_HARNESS_D4p4_L99p1_1-1
+POWER_HARNESS_D4p4_L75p0_2-1
+POWER_HARNESS_D4p4_L75p0_3-1
+POWER_HARNESS_D4p4_L98p6_1-1
 RS485_25x18x9-1
-SIGNAL_HARNESS_D3p2_L22p7_6-1
-SIGNAL_HARNESS_D3p2_L28p0_4-1
-SIGNAL_HARNESS_D3p2_L29p2_0-1
+SIGNAL_HARNESS_D3p2_L22p4_6-1
+SIGNAL_HARNESS_D3p2_L28p6_4-1
+SIGNAL_HARNESS_D3p2_L28p7_0-1
 SIGNAL_HARNESS_D3p2_L58p4_5-1
-SIGNAL_HARNESS_D3p2_L72p7_2-1
-SIGNAL_HARNESS_D3p2_L72p7_3-1
-SIGNAL_HARNESS_D3p2_L99p1_1-1
+SIGNAL_HARNESS_D3p2_L75p0_2-1
+SIGNAL_HARNESS_D3p2_L75p0_3-1
+SIGNAL_HARNESS_D3p2_L98p6_1-1
 STM32F411_53x22x10-1
 TorsionSpringEnvelope_OD38_ID12_W6p4-1
 TorsionSpringEnvelope_OD38_ID12_W6p4-2

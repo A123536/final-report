@@ -34,7 +34,9 @@ namespace VPipeRobotSolidWorks
                 manager.IncludeMultibodyPartInterferences = true;
                 manager.MakeInterferingPartsTransparent = false;
                 manager.CreateFastenersFolder = false;
-                manager.IgnoreHiddenBodies = true;
+                // The pipe is hidden in the default editing display state, but
+                // must still participate in a geometric clearance audit.
+                manager.IgnoreHiddenBodies = false;
                 manager.UseTransform = true;
 
                 object[] raw = manager.GetInterferences() as object[];

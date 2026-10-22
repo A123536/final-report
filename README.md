@@ -30,6 +30,8 @@ simulation/
 
 SOLIDWORKS 主装配体位于 `cad/solidworks/model/V_Pipe_Robot_Concept_ID150.SLDASM`。其 `ID150_NOMINAL` 配置包含 `ROBOT_ONLY` 与 `WITH_PIPE` 两个显示状态；修订模型已完成 140、150、160 mm 三种姿态的实体干涉检查，非预期干涉为零，但仍属于概念包络，不能直接作为加工放行文件。
 
+电子设备外壳已改为六件 FDM/PETG 样机零件：电源舱上盖/底板、控制舱上盖/底板、相机主体/前盖。拼接方案见 `design/printable_enclosure_joint_plan.md`；原生爆炸装配、合盖装配、七页 A3 分件图、PDF、分件 STEP 及已定向的毫米 STL 位于 `cad/solidworks/model/printable_enclosure/`。主装配现有 127 个组件、50 个唯一引用零件。打印前需校准所用机器的定位间隙和所购热熔螺母底孔。
+
 ## 环境与运行
 
 建议使用 Python 3.12 创建独立虚拟环境：

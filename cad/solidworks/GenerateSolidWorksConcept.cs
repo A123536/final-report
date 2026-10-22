@@ -163,6 +163,254 @@ namespace VPipeRobotSolidWorks
             return path;
         }
 
+        private Body2 BoxBody(double cx, double cy, double cz,
+                              double sx, double sy, double sz)
+        {
+            double[] dim = new double[] {
+                M(cx), M(cy), M(cz - sz / 2.0), 0, 0, 1,
+                M(sx), M(sy), M(sz)
+            };
+            Body2 body = _modeler.CreateBodyFromBox3(dim);
+            if (body == null) throw new InvalidOperationException("Could not create box body.");
+            return body;
+        }
+
+        private Body2 CylinderBody(V3 center, V3 axis, double diameter, double length)
+        {
+            V3 unit = axis.Unit();
+            V3 start = center - unit * (length / 2.0);
+            double[] dim = new double[] {
+                M(start.X), M(start.Y), M(start.Z),
+                unit.X, unit.Y, unit.Z,
+                M(diameter) / 2.0, M(length)
+            };
+            Body2 body = (Body2)_modeler.CreateBodyFromCyl(dim);
+            if (body == null) throw new InvalidOperationException("Could not create cylinder body.");
+            return body;
+        }
+
+        private static Body2 BooleanBody(Body2 first, Body2 second,
+                                         swBodyOperationType_e operation, string label)
+        {
+            int error = 0;
+            object[] result = first.Operations2((int)operation, second, out error) as object[];
+            if (result == null || result.Length != 1)
+                throw new InvalidOperationException(label + " Boolean failed, code " + error);
+            return (Body2)result[0];
+        }
+
+        private string SaveBodyPart(string key, Body2 body, double[] color)
+        {
+            string path = PartPath(key);
+            if (File.Exists(path) && new FileInfo(path).Length > 1024)
+            {
+                _partFiles[key] = path;
+                return path;
+            }
+            ModelDoc2 model = NewPart();
+            PartDoc part = (PartDoc)model;
+            if (part.CreateFeatureFromBody3(body, false,
+                (int)swCreateFeatureBodyOpts_e.swCreateFeatureBodyCheck) == null)
+                throw new InvalidOperationException("Body feature failed for " + key);
+            model.MaterialPropertyValues = color;
+            SaveAndClosePart(model, path);
+            _partFiles[key] = path;
+            return path;
+        }
+
+        private string CreatePrintableBayCover(string key, double length, double width,
+                                               double height, double wall, double[] color)
+        {
+            string path = PartPath(key);
+            if (File.Exists(path) && new FileInfo(path).Length > 1024)
+            {
+                _partFiles[key] = path;
+                return path;
+            }
+
+            // Print roof-down; walls grow upward. Use local supports under the
+            // projecting boss shoulders; inserts stay outside the PCB bay.
+            double wallHeight = height - wall;
+            double wallCenterZ = -wall / 2.0;
+            Body2 body = BoxBody(0, 0, height / 2.0 - wall / 2.0,
+                length, width, wall);
+            body = BooleanBody(body,
+                BoxBody(0, -(width - wall) / 2.0, wallCenterZ,
+                    length, wall, wallHeight),
+                swBodyOperationType_e.SWBODYADD, key + " left wall");
+            body = BooleanBody(body,
+                BoxBody(0, (width - wall) / 2.0, wallCenterZ,
+                    length, wall, wallHeight),
+                swBodyOperationType_e.SWBODYADD, key + " right wall");
+            body = BooleanBody(body,
+                BoxBody(-(length - wall) / 2.0, 0, wallCenterZ,
+                    wall, width - 2.0 * wall, wallHeight),
+                swBodyOperationType_e.SWBODYADD, key + " rear wall");
+            body = BooleanBody(body,
+                BoxBody((length - wall) / 2.0, 0, wallCenterZ,
+                    wall, width - 2.0 * wall, wallHeight),
+                swBodyOperationType_e.SWBODYADD, key + " front wall");
+
+            // Keep the bosses just inside the side-wall envelope.  This leaves
+            // the existing cable lanes at Y=+/-37 mm clear while the board
+            // envelopes still retain more than 5 mm of lateral clearance.
+            double bossY = width / 2.0 - 0.5;
+            double bossZ = -height / 2.0 + 4.0;
+            foreach (double side in new double[] { -1.0, 1.0 })
+            {
+                // The positive-Y front boss of the power bay is moved inward
+                // along X so the separately serviceable fuse terminal can sit
+                // beside the cover without sharing material with the boss.
+                double[] bossXs = key.StartsWith("PowerBay", StringComparison.OrdinalIgnoreCase) && side > 0
+                    ? new double[] { -25.0, 5.0 }
+                    : new double[] { -25.0, 25.0 };
+                foreach (double bossX in bossXs)
+                {
+                    Body2 boss = CylinderBody(new V3(bossX, side * bossY, bossZ), Ez, 8.0, 8.0);
+                    Body2 pilot = CylinderBody(new V3(bossX, side * bossY, bossZ), Ez, 4.2, 10.0);
+                    body = BooleanBody(body, boss, swBodyOperationType_e.SWBODYADD,
+                        key + " external insert boss");
+                    // Drill AFTER joining: otherwise the wall fills the bore.
+                    body = BooleanBody(body, pilot, swBodyOperationType_e.SWBODYCUT,
+                        key + " heat-set insert pilot");
+                }
+            }
+            // Open-at-rim cable slots avoid trapped cables and print without
+            // a closed horizontal roof when the cover is printed roof-down.
+            foreach (double end in new double[] { -1.0, 1.0 })
+                body = BooleanBody(body,
+                    BoxBody(end * (length / 2.0 - wall / 2.0), 0,
+                        -height / 2.0 + 2.5, wall + 2.0, 12.0, 5.2),
+                    swBodyOperationType_e.SWBODYCUT, key + " cable rim slot");
+            return SaveBodyPart(key, body, color);
+        }
+
+        private string CreatePrintableBayBase(string key, double length, double width,
+                                              double thickness, double[] color)
+        {
+            string path = PartPath(key);
+            if (File.Exists(path) && new FileInfo(path).Length > 1024)
+            {
+                _partFiles[key] = path;
+                return path;
+            }
+
+            Body2 body = BoxBody(0, 0, 0, length, width, thickness);
+            double earY = width / 2.0 - 0.5;
+            foreach (double side in new double[] { -1.0, 1.0 })
+            {
+                double[] earXs = key.StartsWith("PowerBay", StringComparison.OrdinalIgnoreCase) && side > 0
+                    ? new double[] { -25.0, 5.0 }
+                    : new double[] { -25.0, 25.0 };
+                foreach (double earX in earXs)
+                {
+                    Body2 ear = CylinderBody(new V3(earX, side * earY, 0), Ez, 8.0, thickness);
+                    Body2 clearance = CylinderBody(new V3(earX, side * earY, 0), Ez, 3.4,
+                        thickness + 2.0);
+                    body = BooleanBody(body, ear, swBodyOperationType_e.SWBODYADD,
+                        key + " fastening ear");
+                    body = BooleanBody(body, clearance, swBodyOperationType_e.SWBODYCUT,
+                        key + " M3 clearance");
+                }
+            }
+            // Discontinuous registration tabs: 0.30 mm nominal clearance to
+            // the 68 x 58 mm cavity, with 2.0 mm engagement above the base.
+            foreach (double end in new double[] { -1.0, 1.0 })
+            foreach (double side in new double[] { -1.0, 1.0 })
+                body = BooleanBody(body, BoxBody(end * 33.1, side * 24.5,
+                    thickness / 2.0 + 0.9, 1.2, 4.0, 2.2),
+                    swBodyOperationType_e.SWBODYADD, key + " axial registration tab");
+            foreach (double side in new double[] { -1.0, 1.0 })
+                body = BooleanBody(body, BoxBody(-10.0, side * 28.1,
+                    thickness / 2.0 + 0.9, 4.0, 1.2, 2.2),
+                    swBodyOperationType_e.SWBODYADD, key + " lateral registration tab");
+            return SaveBodyPart(key, body, color);
+        }
+
+        private string CreateCameraHousingBody(string key, double length, double width,
+                                               double height, double wall, double[] color)
+        {
+            string path = PartPath(key);
+            if (File.Exists(path) && new FileInfo(path).Length > 1024)
+            {
+                _partFiles[key] = path;
+                return path;
+            }
+
+            // Rear wall plus four longitudinal walls; +X remains open for the
+            // removable lens bezel.  Print with the rear wall on the build plate.
+            Body2 body = BoxBody(-length / 2.0 + wall / 2.0, 0, 0,
+                wall, width, height);
+            double runLength = length - wall + 0.5;
+            double runCenterX = wall / 2.0 - 0.25;
+            body = BooleanBody(body,
+                BoxBody(runCenterX, -(width - wall) / 2.0, 0,
+                    runLength, wall, height),
+                swBodyOperationType_e.SWBODYADD, key + " lower side wall");
+            body = BooleanBody(body,
+                BoxBody(runCenterX, (width - wall) / 2.0, 0,
+                    runLength, wall, height),
+                swBodyOperationType_e.SWBODYADD, key + " upper side wall");
+            body = BooleanBody(body,
+                BoxBody(runCenterX, 0, -(height - wall) / 2.0,
+                    runLength, width - 2.0 * wall, wall),
+                swBodyOperationType_e.SWBODYADD, key + " bottom wall");
+            body = BooleanBody(body,
+                BoxBody(runCenterX, 0, (height - wall) / 2.0,
+                    runLength, width - 2.0 * wall, wall),
+                swBodyOperationType_e.SWBODYADD, key + " top wall");
+
+            foreach (double y in new double[] { -19.5, 19.5 })
+            foreach (double z in new double[] { -11.5, 11.5 })
+            {
+                Body2 boss = CylinderBody(new V3(length / 2.0 - 4.5, y, z), Ex, 6.0, 9.0);
+                Body2 pilot = CylinderBody(new V3(length / 2.0 - 4.5, y, z), Ex, 4.0, 10.0);
+                boss = BooleanBody(boss, pilot, swBodyOperationType_e.SWBODYCUT,
+                    key + " M2.5 insert pilot");
+                body = BooleanBody(body, boss, swBodyOperationType_e.SWBODYADD,
+                    key + " bezel boss");
+            }
+            // Two rear-edge entries clear the existing power/signal harnesses.
+            // Their edges remain accessible for a split grommet after printing.
+            foreach (double side in new double[] { -1.0, 1.0 })
+                body = BooleanBody(body, BoxBody(-length / 2.0 + 0.5,
+                    side * 20.5, 0, 7.0, 9.0, 12.0),
+                    swBodyOperationType_e.SWBODYCUT, key + " cable entry");
+            return SaveBodyPart(key, body, color);
+        }
+
+        private string CreateCameraBezel(string key, double width, double height,
+                                         double thickness, double[] color)
+        {
+            string path = PartPath(key);
+            if (File.Exists(path) && new FileInfo(path).Length > 1024)
+            {
+                _partFiles[key] = path;
+                return path;
+            }
+
+            Body2 body = BoxBody(0, 0, 0, thickness, width, height);
+            body = BooleanBody(body, CylinderBody(new V3(0, 0, 0), Ex, 19.5,
+                thickness + 2.0), swBodyOperationType_e.SWBODYCUT, key + " lens aperture");
+            foreach (double y in new double[] { -19.5, 19.5 })
+            foreach (double z in new double[] { -11.5, 11.5 })
+                body = BooleanBody(body, CylinderBody(new V3(0, y, z), Ex, 3.0,
+                    thickness + 2.0), swBodyOperationType_e.SWBODYCUT,
+                    key + " M2.5 clearance");
+            // Four short bezel tabs enter the camera cavity with 0.50 mm
+            // clearance and do not enter the optical aperture or screw bosses.
+            foreach (double side in new double[] { -1.0, 1.0 })
+            {
+                body = BooleanBody(body, BoxBody(-thickness / 2.0 - 0.9,
+                    side * 20.9, 0, 2.2, 1.2, 8.0),
+                    swBodyOperationType_e.SWBODYADD, key + " side locating tab");
+                body = BooleanBody(body, BoxBody(-thickness / 2.0 - 0.9,
+                    0, side * 12.9, 2.2, 8.0, 1.2),
+                    swBodyOperationType_e.SWBODYADD, key + " vertical locating tab");
+            }
+            return SaveBodyPart(key, body, color);
+        }
+
         private string CreateEquipmentBayShell(string key, double length, double width,
                                                double height, double wall, double[] color)
         {
@@ -249,13 +497,17 @@ namespace VPipeRobotSolidWorks
             CreateTube("TorsionSpringEnvelope_OD38_ID12_W6p4", 38, 12, 6.4, purple);
             CreateBox("CenterStopTab_12x6x12", 12, 6, 12, dark);
             CreateCylinder("InsertionLockPin_D4_L40", 4, 40, dark);
-            CreateEquipmentBayShell("EquipmentBayShell_70x60x20_t2", 70, 60, 20, 2, lightBlue);
+            CreatePrintableBayCover("PowerBay_TopCover_72x62x22_t2", 72, 62, 22, 2, lightBlue);
+            CreatePrintableBayBase("PowerBay_BasePlate_72x62x2p4", 72, 62, 2.4, lightBlue);
+            CreatePrintableBayCover("ControlBay_TopCover_72x62x22_t2", 72, 62, 22, 2, lightBlue);
+            CreatePrintableBayBase("ControlBay_BasePlate_72x62x2p4", 72, 62, 2.4, lightBlue);
             CreateBox("Buck24to12_65x42x17", 65, 42, 17, blue);
             CreateBox("FuseTerminal_24x16x12", 24, 16, 12, cyan);
             CreateBox("MC33926_50x30x12", 50, 30, 12, red);
             CreateBox("STM32F411_53x22x10", 53, 22, 10, green);
             CreateBox("RS485_25x18x9", 25, 18, 9, cyan);
-            CreateBox("FutureCameraBay_50x48x32", 50, 48, 32, camera);
+            CreateCameraHousingBody("CameraHousing_Body_50x48x32_t2", 50, 48, 32, 2, camera);
+            CreateCameraBezel("CameraHousing_FrontBezel_48x32x2p4_D19p5", 48, 32, 2.4, camera);
             CreateCylinder("CameraLensEnvelope_D18_L7", 18, 7, dark);
             CreateCylinder("M12GlandEnvelope_D14_L15", 14, 15, dark);
             CreateCylinder("ExternalTether_D7_L30", 7, 30, red);
@@ -443,27 +695,33 @@ namespace VPipeRobotSolidWorks
 
             V3 rearInward = (center - rear).Unit();
             V3 rearPodNormal = V3.Cross(rearInward, Ey).Unit();
-            V3 rearPod = rear + rearInward * 85.0 + rearPodNormal * 30.0;
-            Add(assembly, "EquipmentBayShell_70x60x20_t2", "REAR_POWER_BAY_SHELL_70x60x20", rearPod, rearInward, Ey, rearPodNormal);
+            V3 rearPod = rear + rearInward * 85.0 + rearPodNormal * 33.0;
+            Add(assembly, "PowerBay_TopCover_72x62x22_t2", "REAR_POWER_BAY_TOP_COVER", rearPod, rearInward, Ey, rearPodNormal);
+            Add(assembly, "PowerBay_BasePlate_72x62x2p4", "REAR_POWER_BAY_BASE_PLATE",
+                rearPod - rearPodNormal * 12.2, rearInward, Ey, rearPodNormal);
             AddBoard(assembly, "Buck24to12_65x42x17", "BUCK_24V_TO_12V_ENVELOPE", rearPod,
                 rearInward, rearPodNormal, 0, 0, -1.0, 65, 42, 17);
             Add(assembly, "FuseTerminal_24x16x12", "FUSE_TERMINAL_EXTERNAL",
-                rearPod + rearInward * 22 + new V3(0, 38, 0) - rearPodNormal * 1.0,
+                rearPod + rearInward * 30 + new V3(0, 39.0, 0) - rearPodNormal * 12.0,
                 rearInward, Ey, rearPodNormal);
 
             V3 frontInward = (center - front).Unit();
             V3 frontPodNormal = V3.Cross(frontInward, Ey).Unit() * -1.0;
-            V3 frontPod = front + frontInward * 85.0 + frontPodNormal * 30.0;
-            Add(assembly, "EquipmentBayShell_70x60x20_t2", "FRONT_CONTROL_BAY_SHELL_70x60x20", frontPod, frontInward, Ey, frontPodNormal);
+            V3 frontPod = front + frontInward * 85.0 + frontPodNormal * 33.0;
+            Add(assembly, "ControlBay_TopCover_72x62x22_t2", "FRONT_CONTROL_BAY_TOP_COVER", frontPod, frontInward, Ey, frontPodNormal);
+            Add(assembly, "ControlBay_BasePlate_72x62x2p4", "FRONT_CONTROL_BAY_BASE_PLATE",
+                frontPod - frontPodNormal * 12.2, frontInward, Ey, frontPodNormal);
             AddBoard(assembly, "MC33926_50x30x12", "DUAL_MC33926_ENVELOPE", frontPod,
-                frontInward, frontPodNormal, -8, -13, 0, 50, 30, 12);
+                frontInward, frontPodNormal, -8, -11.5, 0, 50, 30, 12);
             AddBoard(assembly, "STM32F411_53x22x10", "STM32F411_ENVELOPE", frontPod,
-                frontInward, frontPodNormal, -8, 15, 0, 53, 22, 10);
-            Add(assembly, "RS485_25x18x9", "RS485_MAX3485_ROTATED", frontPod + frontInward * 26,
+                frontInward, frontPodNormal, -8, 15.5, 0, 53, 22, 10);
+            Add(assembly, "RS485_25x18x9", "RS485_MAX3485_ROTATED", frontPod + frontInward * 25,
                 Ey, frontInward * -1.0, frontPodNormal);
 
             V3 cameraCenter = new V3(175, 0, 0);
-            Add(assembly, "FutureCameraBay_50x48x32", "FUTURE_CAMERA_BAY_50x48x32", cameraCenter, Ex, Ey, Ez);
+            Add(assembly, "CameraHousing_Body_50x48x32_t2", "CAMERA_HOUSING_BODY", cameraCenter, Ex, Ey, Ez);
+            Add(assembly, "CameraHousing_FrontBezel_48x32x2p4_D19p5", "CAMERA_HOUSING_FRONT_BEZEL",
+                cameraCenter + new V3(26.2, 0, 0), Ex, Ey, Ez);
             AddAxis(assembly, "CameraLensEnvelope_D18_L7", "CAMERA_LENS_PORT_D18", cameraCenter + new V3(28.5, 0, 0), Ex);
 
             V3 tetherEntry = new V3(-171, 0, -12);
@@ -471,10 +729,10 @@ namespace VPipeRobotSolidWorks
             AddAxis(assembly, "ExternalTether_D7_L30", "EXTERNAL_TETHER_ENVELOPE", tetherEntry + new V3(-15, 0, 0), Ex);
 
             V3[] bridges = new V3[] {
-                rearPod - rearInward * 24 + rearPodNormal * 12.5,
-                rearPod + rearInward * 24 + rearPodNormal * 12.5,
-                frontPod - frontInward * 24 + frontPodNormal * 12.5,
-                frontPod + frontInward * 24 + frontPodNormal * 12.5
+                rearPod - rearInward * 24 + rearPodNormal * 13.5,
+                rearPod + rearInward * 24 + rearPodNormal * 13.5,
+                frontPod - frontInward * 24 + frontPodNormal * 13.5,
+                frontPod + frontInward * 24 + frontPodNormal * 13.5
             };
             for (int i = 0; i < bridges.Length; ++i)
             {
@@ -499,12 +757,12 @@ namespace VPipeRobotSolidWorks
             };
             V3[] signalPoints = new V3[] {
                 tetherEntry + new V3(0, 10, 0),
-                new V3(-160, 37, -12),
-                rearPod + new V3(0, 37, 0),
-                center + new V3(0, 37, -32),
-                frontPod + new V3(0, 37, 0),
-                frontMotorBypass + new V3(0, 37, 0),
-                frontWheelBypass + new V3(0, 37, 0),
+                new V3(-160, 36.5, -12),
+                rearPod + new V3(0, 36.5, 0),
+                center + new V3(0, 36.5, -32),
+                frontPod + new V3(0, 36.5, 0),
+                frontMotorBypass + new V3(0, 36.5, 0),
+                frontWheelBypass + new V3(0, 36.5, 0),
                 cameraCenter + new V3(-25, 22, 0)
             };
             for (int i = 0; i < powerPoints.Length - 1; ++i)
@@ -531,8 +789,9 @@ namespace VPipeRobotSolidWorks
                 "Rear/Front half wheelbase: " + halfWheelbase.ToString("F6", CultureInfo.InvariantCulture) + " mm\r\n" +
                 "Radial wheel-axis offset: " + radialOffset.ToString("F6", CultureInfo.InvariantCulture) + " mm\r\n" +
                 "Gear train: module 1, 25T motor / 25T idler / 40T wheel; overall ratio 1.600\r\n" +
-                "Equipment bay shells: 70 x 60 x 20 mm, open-bottom, 2 mm wall\r\n" +
-                "Camera reserve: 50 x 48 x 32 mm\r\n" +
+                "Printable equipment enclosures: 72 x 62 x 24.4 mm assembled; separate cover/base; 2.0/2.4 mm walls\r\n" +
+                "Fastening: four external M3 insert bosses per equipment enclosure\r\n" +
+                "Camera enclosure: 50 x 48 x 32 mm body plus removable 2.4 mm front bezel\r\n" +
                 "IMPORTANT: wheel details, spring coil geometry, PCB holes and gear teeth are envelopes pending purchased-part measurements.\r\n");
             return assemblyPath;
         }
@@ -541,6 +800,19 @@ namespace VPipeRobotSolidWorks
         {
             BuildPartLibrary();
             return BuildAssembly();
+        }
+
+        public string RunPrintableEnclosuresOnly()
+        {
+            double[] blue = Appearance(0.33, 0.60, 0.82, 0.0);
+            double[] purple = Appearance(0.57, 0.31, 0.75, 0.0);
+            CreatePrintableBayCover("PowerBay_TopCover_72x62x22_t2", 72, 62, 22, 2, blue);
+            CreatePrintableBayBase("PowerBay_BasePlate_72x62x2p4", 72, 62, 2.4, blue);
+            CreatePrintableBayCover("ControlBay_TopCover_72x62x22_t2", 72, 62, 22, 2, blue);
+            CreatePrintableBayBase("ControlBay_BasePlate_72x62x2p4", 72, 62, 2.4, blue);
+            CreateCameraHousingBody("CameraHousing_Body_50x48x32_t2", 50, 48, 32, 2, purple);
+            CreateCameraBezel("CameraHousing_FrontBezel_48x32x2p4_D19p5", 48, 32, 2.4, purple);
+            return _parts;
         }
     }
 
@@ -559,7 +831,8 @@ namespace VPipeRobotSolidWorks
                 if (pipeId < 140.0 || pipeId > 160.0)
                     throw new ArgumentOutOfRangeException("pipeId", "Pipe ID must remain inside the 140-160 mm design range.");
                 Generator generator = new Generator(sw, output, pipeId);
-                string assembly = generator.Run();
+                string assembly = args.Length > 2 && args[2] == "--enclosures-only"
+                    ? generator.RunPrintableEnclosuresOnly() : generator.Run();
                 Console.WriteLine("CREATED=" + assembly);
                 return 0;
             }

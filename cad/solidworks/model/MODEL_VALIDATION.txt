@@ -6,6 +6,11 @@ Nominal V angle: 108.757667 deg
 Rear/Front half wheelbase: 121.932848 mm
 Radial wheel-axis offset: 43.681748 mm
 Gear train: module 1, 25T motor / 25T idler / 40T wheel; overall ratio 1.600
-Equipment bay shells: 70 x 60 x 20 mm, open-bottom, 2 mm wall
-Camera reserve: 50 x 48 x 32 mm
+Printable enclosures: two 72 x 62 x 22 mm covers, two 2.4 mm bases; overall width with bosses 69 mm
+Camera: 50 x 48 x 32 mm hollow body + 2.4 mm removable front bezel; 9 x 12 mm cable slots
+Joints: 0.30 mm bay locating clearance; 0.50 mm camera locating clearance; removable screws/heat-set inserts
+FDM PETG: six separate parts; oriented millimetre STL and per-part STEP in printable_enclosure/
+Fasteners: eight M3x10 low button head (D<=5.7 mm, H<=1.7 mm); four M2.5x8
+Final solid audits: ID140/150/160 each 23 classified conceptual connections, zero unintended clashes
+Closed enclosure assembly: zero clashes; 12 screw envelopes: zero clashes at all three diameters
 IMPORTANT: wheel details, spring coil geometry, PCB holes and gear teeth are envelopes pending purchased-part measurements.

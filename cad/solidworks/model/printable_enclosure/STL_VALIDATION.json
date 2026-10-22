@@ -1,0 +1,97 @@
+{
+  "passed": true,
+  "count": 6,
+  "description": "Millimetre STL meshes; single closed solids; suggested bed orientation; Z minimum 0.",
+  "parts": [
+    {
+      "file": "E-01_PowerBay_TopCover_72x62x22_t2.STL",
+      "units": "mm",
+      "size_mm": [
+        72.0,
+        69.0,
+        22.0
+      ],
+      "z_min_mm": 0.0,
+      "closed": true,
+      "winding_consistent": true,
+      "connected_solids": 1,
+      "volume_mm3": 19681.882442382193,
+      "triangles": 556
+    },
+    {
+      "file": "E-02_PowerBay_BasePlate_72x62x2p4.STL",
+      "units": "mm",
+      "size_mm": [
+        72.0,
+        69.0,
+        4.400000095367432
+      ],
+      "z_min_mm": 0.0,
+      "closed": true,
+      "winding_consistent": true,
+      "connected_solids": 1,
+      "volume_mm3": 10883.15024759609,
+      "triangles": 540
+    },
+    {
+      "file": "E-03_ControlBay_TopCover_72x62x22_t2.STL",
+      "units": "mm",
+      "size_mm": [
+        72.0,
+        69.0,
+        22.0
+      ],
+      "z_min_mm": 0.0,
+      "closed": true,
+      "winding_consistent": true,
+      "connected_solids": 1,
+      "volume_mm3": 19681.88253935749,
+      "triangles": 556
+    },
+    {
+      "file": "E-04_ControlBay_BasePlate_72x62x2p4.STL",
+      "units": "mm",
+      "size_mm": [
+        72.0,
+        69.0,
+        4.400000095367432
+      ],
+      "z_min_mm": 0.0,
+      "closed": true,
+      "winding_consistent": true,
+      "connected_solids": 1,
+      "volume_mm3": 10883.150269691103,
+      "triangles": 526
+    },
+    {
+      "file": "E-05_CameraHousing_Body_50x48x32_t2.STL",
+      "units": "mm",
+      "size_mm": [
+        32.0,
+        48.0,
+        50.0
+      ],
+      "z_min_mm": 0.0,
+      "closed": true,
+      "winding_consistent": true,
+      "connected_solids": 1,
+      "volume_mm3": 17670.058443338818,
+      "triangles": 564
+    },
+    {
+      "file": "E-06_CameraHousing_FrontBezel_48x32x2p4_D19p5.STL",
+      "units": "mm",
+      "size_mm": [
+        32.0,
+        48.0,
+        4.400000095367432
+      ],
+      "z_min_mm": 2.1684043449710089e-16,
+      "closed": true,
+      "winding_consistent": true,
+      "connected_solids": 1,
+      "volume_mm3": 2987.9780909496203,
+      "triangles": 542
+    }
+  ]
+}

@@ -14,7 +14,7 @@
 
 ## 当前交付物
 
-- `model/V_Pipe_Robot_Concept_ID150.SLDASM`：主装配体，共124个顶层组件、46个唯一引用零件。
+- `model/V_Pipe_Robot_Concept_ID150.SLDASM`：主装配体，共127个顶层组件、50个唯一引用零件。
 - `model/parts/*.SLDPRT`：独立原生零件和器件包络。
 - `model/MODEL_VALIDATION.txt`：关键几何参数检查记录。
 - `model/SOLIDWORKS_ASSEMBLY_AUDIT.txt`：组件清单及显示状态审计。
@@ -24,6 +24,12 @@
 - `model/overview_robot_only.png`：隐藏管道后的机器人装配效果。
 - `model/V_Pipe_Robot_Concept_ID150_GA.SLDDRW`：A3 总布置工程图，包含 V 型侧向、横向和等轴测视图。
 - `model/general_arrangement.png`：总布置工程图预览。
+- `model/printable_enclosure/Printable_Enclosure_Exploded_ID150.SLDASM`：六件式外壳爆炸摆放装配。
+- `model/printable_enclosure/Printable_Enclosure_Assembled_ID150.SLDASM`：外壳实际对合装配，用于拼接检查。
+- `model/printable_enclosure/Printable_Enclosure_Split_A3.SLDDRW`：七页 A3 图纸，总图和六件分件视图、外形及孔位表；同目录有 PDF。
+- `model/printable_enclosure/STL_mm/`：六件按打印方向摆好的毫米 STL。
+- `model/printable_enclosure/STEP_parts/`：六件设计坐标下的 STEP。
+- `../../design/printable_enclosure_joint_plan.md`：FDM/PETG 拼接、紧固、打印和装配说明。
 
 主装配体默认隐藏管道，方便继续编辑内部结构。在特征树中选择 `Pipe_ID150_OD154_L430` 并执行“显示”即可恢复透明管道。
 
@@ -35,3 +41,7 @@
 装配体自定义属性记录了管径范围、轮子包络、150 mm 连杆轴距、108.757667° 标称 V 角、90°–125°机械限位、目标质量、速度和行程。
 
 `GenerateSolidWorksConcept.cs` 是可重复生成 140–160 mm 姿态的参数源；`FinalizeSolidWorksAssembly.cs` 用于设置透明度、导出快照、审计组件并保存最终显示状态；`CreateGeneralArrangementDrawing.cs` 生成 A3 总布置工程图。`AuditSolidWorksInterferences.cs` 以只读方式执行实体干涉检查并主动关闭文档；`CheckSolidWorksCleanClose.cs` 验证普通打开后所有文档的 `SaveFlag` 均保持为假。工具的本地 `.exe` 和 SOLIDWORKS Interop DLL 属于构建产物，不纳入 Git。
+
+`GenerateSolidWorksConcept.exe <新输出目录> 150 --enclosures-only` 可单独生成六件外壳。生成器会复用已有文件，因此几何修改后必须使用新的输出目录。`PublishPrintableEnclosure.cs` 将装配实际引用的零件复制并重定向到正式目录；`ExportPrintableEnclosureParts.cs` 检查实体、贯通孔并导出 STEP/STL；`CreatePrintableEnclosureDrawing.cs` 生成合盖/爆炸装配和七页图纸；`AuditEnclosureFastenerClearance.cs` 检查 12 只螺钉的杆、头包络；`verify_print_meshes.py` 检查 STL 毫米尺度、封闭性、连通性和平台方向。
+
+如图纸首次打开更新了引用缓存，`StabilizeSavedCadDocuments.exe <图纸路径> <授权model根目录>` 会按装配体、图纸的依赖顺序保存，随后重新打开验证；不会清空保存标志或关闭警告。最终仍需用 `CheckSolidWorksCleanClose.exe <文档路径>` 独立确认无临时/缺失引用且保存标志全部为假。

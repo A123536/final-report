@@ -1,4 +1,6 @@
 Revised separated harness routes for the interference-checked ID150 assembly.
-POWER: diameter 4.4 mm; segment lengths 38.6, 99.1, 72.7, 72.7, 28.0, 58.4, 22.7 mm.
-SIGNAL: diameter 3.2 mm; segment lengths 29.2, 99.1, 72.7, 72.7, 28.0, 58.4, 22.7 mm.
+POWER: diameter 4.4 mm; segment lengths 38.6, 98.6, 75.0, 75.0, 28.6, 58.4, 22.7 mm.
+SIGNAL: diameter 3.2 mm; segment lengths 28.7, 98.6, 75.0, 75.0, 28.6, 58.4, 22.4 mm.
 The routes use separate Y channels, lower at the center hinge, and bypass the front motor and wheel before entering the camera bay.
+Printable enclosure revision: power channel Y=-37; signal channel Y=+36.5 mm.
+Camera rear-edge openings clear both harnesses. Segment dimensions are rounded filename tokens, not wire cut lengths.

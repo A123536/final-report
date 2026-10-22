@@ -97,6 +97,11 @@ namespace VPipeRobotSolidWorks
 
                 drawingModel.ForceRebuild3(false);
                 drawingModel.ViewZoomtofit2();
+                int referenceError=0, referenceWarning=0;
+                if (!assemblyModel.Save3((int)swSaveAsOptions_e.swSaveAsOptions_Silent,
+                    ref referenceError, ref referenceWarning))
+                    throw new InvalidOperationException("Referenced assembly save failed: " + referenceError);
+                drawingModel.ForceRebuild3(false);
                 string drawingPath = Path.Combine(output, "V_Pipe_Robot_Concept_ID150_GA.SLDDRW");
                 int saveCode = drawingModel.SaveAs3(drawingPath, 0,
                     (int)swSaveAsOptions_e.swSaveAsOptions_Silent);

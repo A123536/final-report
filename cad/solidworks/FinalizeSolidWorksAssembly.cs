@@ -77,16 +77,18 @@ namespace VPipeRobotSolidWorks
                     string name = component.Name2;
                     names.Add(name);
                     if (component.Visible == (int)swComponentVisibilityState_e.swComponentHidden) hidden++;
-                    if (name.IndexOf("Pipe_ID150_OD154_L430", StringComparison.OrdinalIgnoreCase) >= 0)
+                    if (name.IndexOf("Pipe_ID", StringComparison.OrdinalIgnoreCase) >= 0 &&
+                        name.IndexOf("_L430", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         pipe = component;
                         component.MaterialPropertyValues = Appearance(0.47, 0.69, 0.82, 0.88);
                     }
-                    else if (name.IndexOf("EquipmentBayShell_70x60x20", StringComparison.OrdinalIgnoreCase) >= 0)
+                    else if (name.IndexOf("Bay_TopCover_72x62x22", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                             name.IndexOf("Bay_BasePlate_72x62", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         component.MaterialPropertyValues = Appearance(0.52, 0.66, 0.80, 0.60);
                     }
-                    else if (name.IndexOf("FutureCameraBay_50x48x32", StringComparison.OrdinalIgnoreCase) >= 0)
+                    else if (name.IndexOf("CameraHousing_", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         component.MaterialPropertyValues = Appearance(0.57, 0.31, 0.75, 0.50);
                     }
@@ -124,7 +126,7 @@ namespace VPipeRobotSolidWorks
                 SetText(properties, "Nominal V angle", "108.757667 deg");
                 SetText(properties, "Mechanical stops", "90-125 deg");
                 SetText(properties, "Gear train", "module 1: 25T motor / 25T idler / 40T wheel; ratio 1.6");
-                SetText(properties, "Equipment bays", "70 x 60 x 20 mm open-bottom shells, 2 mm wall");
+                SetText(properties, "Equipment bays", "72 x 62 x 24.4 mm; separate covers and bases; PETG prototype");
                 SetText(properties, "Interference verification", "140/150/160 mm: zero unintended solid interference");
                 SetText(properties, "Target mass", "1.6 kg; maximum 1.8 kg");
                 SetText(properties, "Target speed", "0.15 m/s");
@@ -154,6 +156,12 @@ namespace VPipeRobotSolidWorks
                 int saveCode = model.SaveAs3(assemblyPath, 0,
                     (int)swSaveAsOptions_e.swSaveAsOptions_Silent);
                 if (saveCode != 0) throw new InvalidOperationException("Assembly save failed: " + saveCode);
+
+                error = 0; warning = 0;
+                ok = model.Extension.SaveAs(Path.ChangeExtension(assemblyPath, ".STEP"),
+                    (int)swSaveAsVersion_e.swSaveAsCurrentVersion,
+                    (int)swSaveAsOptions_e.swSaveAsOptions_Silent, null, ref error, ref warning);
+                if (!ok) throw new InvalidOperationException("STEP export failed: " + error);
 
                 names.Sort(StringComparer.OrdinalIgnoreCase);
                 string[] finalStates = DisplayStateNames(configuration);
