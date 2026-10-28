@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg
+  PUBLIC '-//W3C//DTD SVG 1.0//EN'
+  'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
+<svg width="1000" height="620" preserveAspectRatio="xMinYMin meet" viewBox="0 0 1000 620" xmlns="http://www.w3.org/2000/svg" version="1.0" fill-rule="evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>...</title>
+	<desc>...</desc>
+	<clipPath id="clip">
+		<rect x="0" y="0" width="1000" height="620"/>
+	</clipPath>
+	<g id="group" transform="scale(1,-1) translate(0,-620)" style="clip-path: url(#clip)">
+		<g transform="">
+			<rect x="0" y="0" width="1000" height="620" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<text x="25" y="584" style="font-family: CJKB; font-size: 25px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,1168) scale(1,-1)">04  V形机构、弹簧与装管锁销</text>
+			<text x="25" y="555" style="font-family: CJK; font-size: 15px;fill: rgb(32%,40%,46%); stroke:none;" transform="translate(0,1110) scale(1,-1)">此图是运动/受力示意；不显示未完成的轴承座、簧腿孔及加工细节</text>
+			<path d="M 75,160 L 925,160 Z" style="stroke: rgb(72%,78%,82%); stroke-linecap: butt; stroke-width: 2;"/>
+			<path d="M 75,445 L 925,445 Z" style="stroke: rgb(72%,78%,82%); stroke-linecap: butt; stroke-width: 2;"/>
+			<path d="M 245,215 L 500,390 Z" style="stroke: rgb(9%,20%,29%); stroke-linecap: butt; stroke-width: 12;"/>
+			<path d="M 500,390 L 755,215 Z" style="stroke: rgb(9%,20%,29%); stroke-linecap: butt; stroke-width: 12;"/>
+			<circle cx="245" cy="215" r="55" style="stroke: rgb(14%,43%,61%); stroke-linecap: butt; stroke-width: 3; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<circle cx="245" cy="215" r="8" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(9%,20%,29%); fill-rule: evenodd;"/>
+			<circle cx="500" cy="390" r="55" style="stroke: rgb(14%,43%,61%); stroke-linecap: butt; stroke-width: 3; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<circle cx="500" cy="390" r="8" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(9%,20%,29%); fill-rule: evenodd;"/>
+			<circle cx="755" cy="215" r="55" style="stroke: rgb(14%,43%,61%); stroke-linecap: butt; stroke-width: 3; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<circle cx="755" cy="215" r="8" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(9%,20%,29%); fill-rule: evenodd;"/>
+			<circle cx="486" cy="390" r="23" style="stroke: rgb(50%,32%,59%); stroke-linecap: butt; stroke-width: 3; fill: none; fill-rule: evenodd;"/>
+			<circle cx="514" cy="390" r="23" style="stroke: rgb(50%,32%,59%); stroke-linecap: butt; stroke-width: 3; fill: none; fill-rule: evenodd;"/>
+			<path d="M 500,446 L 500,478 Z" style="stroke: rgb(50%,32%,59%); stroke-linecap: butt; stroke-width: 3;"/>
+			<polygon points="500 478, 495.5 468, 504.5 468" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(50%,32%,59%); fill-rule: evenodd;"/>
+			<path d="M 245,160 L 245,127 Z" style="stroke: rgb(14%,43%,61%); stroke-linecap: butt; stroke-width: 3;"/>
+			<polygon points="245 127, 249.5 137, 240.5 137" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(14%,43%,61%); fill-rule: evenodd;"/>
+			<path d="M 755,160 L 755,127 Z" style="stroke: rgb(14%,43%,61%); stroke-linecap: butt; stroke-width: 3;"/>
+			<polygon points="755 127, 759.5 137, 750.5 137" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(14%,43%,61%); fill-rule: evenodd;"/>
+			<text x="88" y="465" style="font-family: CJK; font-size: 17px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,930) scale(1,-1)">管壁</text>
+			<text x="650" y="450" style="font-family: CJKB; font-size: 18px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,900) scale(1,-1)">中心轮压壁力约50–53N</text>
+			<text x="125" y="315" style="font-family: CJK; font-size: 18px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,630) scale(1,-1)">后主动轮 M03</text>
+			<text x="710" y="315" style="font-family: CJK; font-size: 18px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,630) scale(1,-1)">前主动轮 M03</text>
+			<text x="400.00244140625" y="245" style="font-family: CJK; font-size: 18px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,490) scale(1,-1)">S06 铰链 / S01 镜像扭簧</text>
+			<text x="155" y="370" style="font-family: CJK; font-size: 17px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,740) scale(1,-1)">S02 连杆</text>
+			<path d="M 245,362 L 365,298 Z" style="stroke: rgb(32%,40%,46%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<text x="755" y="370" style="font-family: CJK; font-size: 17px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,740) scale(1,-1)">S02 连杆</text>
+			<path d="M 745,362 L 635,298 Z" style="stroke: rgb(32%,40%,46%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<text x="280" y="83" style="font-family: CJK; font-size: 19px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,166) scale(1,-1)">S07限制90°–125°；S08在专用耳孔中锁定装管姿态。</text>
+			<text x="25" y="22" style="font-family: CJK; font-size: 14px;fill: rgb(32%,40%,46%); stroke:none;" transform="translate(0,44) scale(1,-1)">先装限位、检查空载转动，再用工装预紧。不能把中心轮自转和两根连杆开合同时锁死。</text>
+		</g>
+	</g>
+</svg>

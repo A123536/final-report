@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg
+  PUBLIC '-//W3C//DTD SVG 1.0//EN'
+  'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
+<svg width="1000" height="620" preserveAspectRatio="xMinYMin meet" viewBox="0 0 1000 620" xmlns="http://www.w3.org/2000/svg" version="1.0" fill-rule="evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>...</title>
+	<desc>...</desc>
+	<clipPath id="clip">
+		<rect x="0" y="0" width="1000" height="620"/>
+	</clipPath>
+	<g id="group" transform="scale(1,-1) translate(0,-620)" style="clip-path: url(#clip)">
+		<g transform="">
+			<rect x="0" y="0" width="1000" height="620" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<text x="25" y="584" style="font-family: CJKB; font-size: 25px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,1168) scale(1,-1)">02  一组驱动如何把转矩传给轮子</text>
+			<text x="25" y="555" style="font-family: CJK; font-size: 15px;fill: rgb(32%,40%,46%); stroke:none;" transform="translate(0,1110) scale(1,-1)">前后各一组；图中圆圈是节圆示意，不是可加工齿形</text>
+			<circle cx="155" cy="365" r="75.0" style="stroke: rgb(74%,41%,12%); stroke-linecap: butt; stroke-width: 2; fill: rgb(96%,89%,81%); fill-rule: evenodd;"/>
+			<circle cx="155" cy="365" r="11" style="stroke: rgb(9%,20%,29%); stroke-linecap: butt; stroke-width: 1.5; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<text x="135.481689453125" y="390" style="font-family: CJKB; font-size: 21px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,780) scale(1,-1)">25T</text>
+			<text x="136.725830078125" y="262.0" style="font-family: CJK; font-size: 17px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,524) scale(1,-1)">M05</text>
+			<text x="121.0" y="240.0" style="font-family: CJK; font-size: 17px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,480) scale(1,-1)">电机齿轮</text>
+			<text x="131.0" y="470.0" style="font-family: CJK; font-size: 16px;fill: rgb(32%,40%,46%); stroke:none;" transform="translate(0,940) scale(1,-1)">顺时针</text>
+			<circle cx="305" cy="365" r="75.0" style="stroke: rgb(74%,41%,12%); stroke-linecap: butt; stroke-width: 2; fill: rgb(96%,89%,81%); fill-rule: evenodd;"/>
+			<circle cx="305" cy="365" r="11" style="stroke: rgb(9%,20%,29%); stroke-linecap: butt; stroke-width: 1.5; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<text x="285.481689453125" y="390" style="font-family: CJKB; font-size: 21px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,780) scale(1,-1)">25T</text>
+			<text x="286.725830078125" y="262.0" style="font-family: CJK; font-size: 17px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,524) scale(1,-1)">M06</text>
+			<text x="288.0" y="240.0" style="font-family: CJK; font-size: 17px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,480) scale(1,-1)">惰轮</text>
+			<text x="281.0" y="470.0" style="font-family: CJK; font-size: 16px;fill: rgb(32%,40%,46%); stroke:none;" transform="translate(0,940) scale(1,-1)">逆时针</text>
+			<circle cx="500.0" cy="365" r="120" style="stroke: rgb(74%,41%,12%); stroke-linecap: butt; stroke-width: 2; fill: rgb(96%,89%,81%); fill-rule: evenodd;"/>
+			<circle cx="500.0" cy="365" r="11" style="stroke: rgb(9%,20%,29%); stroke-linecap: butt; stroke-width: 1.5; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<text x="480.481689453125" y="390" style="font-family: CJKB; font-size: 21px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,780) scale(1,-1)">40T</text>
+			<text x="481.725830078125" y="217" style="font-family: CJK; font-size: 17px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,434) scale(1,-1)">M07</text>
+			<text x="466.0" y="195" style="font-family: CJK; font-size: 17px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,390) scale(1,-1)">轮轴齿轮</text>
+			<text x="476.0" y="515" style="font-family: CJK; font-size: 16px;fill: rgb(32%,40%,46%); stroke:none;" transform="translate(0,1030) scale(1,-1)">顺时针</text>
+			<path d="M 155,505 L 305,505 Z" style="stroke: rgb(32%,40%,46%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<text x="196.640625" y="517" style="font-family: CJK; font-size: 16px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,1034) scale(1,-1)">25.0 mm</text>
+			<path d="M 305,505 L 500,505 Z" style="stroke: rgb(32%,40%,46%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<text x="369.640625" y="517" style="font-family: CJK; font-size: 16px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,1034) scale(1,-1)">32.5 mm</text>
+			<rect x="690" y="350" width="270" height="115" rx="6" ry="6" style="stroke: rgb(72%,78%,82%); stroke-linecap: butt; stroke-width: 1.2; fill: rgb(92%,95%,96%); fill-rule: evenodd;"/>
+			<text x="733.3759765625" y="412.89" style="font-family: CJK; font-size: 17px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,825) scale(1,-1)">M01 电机 + 内置减速箱</text>
+			<text x="742.39892578125" y="390.89" style="font-family: CJK; font-size: 17px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,781) scale(1,-1)">→ 25T → 25T → 40T</text>
+			<text x="690" y="315" style="font-family: CJKB; font-size: 20px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,630) scale(1,-1)">总减速比 40 / 25 = 1.6</text>
+			<text x="690" y="280" style="font-family: CJK; font-size: 16px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,560) scale(1,-1)">两次外啮合后，轮与电机同向。</text>
+			<rect x="55" y="90" width="890" height="100" rx="6" ry="6" style="stroke: rgb(72%,78%,82%); stroke-linecap: butt; stroke-width: 1.2; fill: rgb(92%,95%,96%); fill-rule: evenodd;"/>
+			<text x="118.98095703124994" y="145.56" style="font-family: CJK; font-size: 18px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,291) scale(1,-1)">轮轴支撑关系： S03座［M08轴承］— M04轮毂 / M03轮子 / M07齿轮 —［M08轴承］S03座</text>
+			<text x="273.65087890625" y="122.56" style="font-family: CJK; font-size: 18px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,245) scale(1,-1)">M10轴承受并传递载荷；压壁力不直接压到电机输出轴。</text>
+			<text x="25" y="22" style="font-family: CJK; font-size: 14px;fill: rgb(32%,40%,46%); stroke:none;" transform="translate(0,44) scale(1,-1)">惰轮轴/轴承/止动结构和轴向尺寸链仍待制造图；不把“φ6×14包络”当成已核实的最终轴长。</text>
+		</g>
+	</g>
+</svg>

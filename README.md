@@ -32,6 +32,8 @@ SOLIDWORKS 主装配体位于 `cad/solidworks/model/V_Pipe_Robot_Concept_ID150.S
 
 电子设备外壳已改为六件 FDM/PETG 样机零件：电源舱上盖/底板、控制舱上盖/底板、相机主体/前盖。拼接方案见 `design/printable_enclosure_joint_plan.md`；原生爆炸装配、合盖装配、七页 A3 分件图、PDF、分件 STEP 及已定向的毫米 STL 位于 `cad/solidworks/model/printable_enclosure/`。主装配现有 127 个组件、50 个唯一引用零件。打印前需校准所用机器的定位间隙和所购热熔螺母底孔。
 
+2026-10-28采购清单对应的87项器材说明见 `design/assembly_guide_20261028.md`；`cad/assembly_guide/` 包含8张模型/连接图和完整PDF。模型显示网格从原生装配只读导出，未改变CAD；新增Luckfox、实际板卡、机架夹持和三路拖线入口仍需按实物完成安装设计。采购编号 `E01` 与外壳图号 `E-01` 含义不同。
+
 ## 环境与运行
 
 建议使用 Python 3.12 创建独立虚拟环境：

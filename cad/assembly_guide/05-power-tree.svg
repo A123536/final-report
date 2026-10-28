@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg
+  PUBLIC '-//W3C//DTD SVG 1.0//EN'
+  'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
+<svg width="1000" height="620" preserveAspectRatio="xMinYMin meet" viewBox="0 0 1000 620" xmlns="http://www.w3.org/2000/svg" version="1.0" fill-rule="evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>...</title>
+	<desc>...</desc>
+	<clipPath id="clip">
+		<rect x="0" y="0" width="1000" height="620"/>
+	</clipPath>
+	<g id="group" transform="scale(1,-1) translate(0,-620)" style="clip-path: url(#clip)">
+		<g transform="">
+			<rect x="0" y="0" width="1000" height="620" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<text x="25" y="584" style="font-family: CJKB; font-size: 25px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,1168) scale(1,-1)">05  供电树：24V、12V、5V不能混接</text>
+			<text x="25" y="555" style="font-family: CJK; font-size: 15px;fill: rgb(32%,40%,46%); stroke:none;" transform="translate(0,1110) scale(1,-1)">橙线为24/12V功率路径，蓝线为5V；各电源需正负成对连接，箭头仅表示功能路径</text>
+			<rect x="25" y="410" width="165" height="95" rx="6" ry="6" style="stroke: rgb(72%,78%,82%); stroke-linecap: butt; stroke-width: 1.2; fill: rgb(92%,95%,96%); fill-rule: evenodd;"/>
+			<text x="55.81518554687499" y="462.89" style="font-family: CJK; font-size: 17px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,925) scale(1,-1)">P01 管外电源</text>
+			<text x="72.1552734375" y="440.89" style="font-family: CJK; font-size: 17px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,881) scale(1,-1)">24V / 5A</text>
+			<rect x="230" y="410" width="155" height="95" rx="6" ry="6" style="stroke: rgb(72%,78%,82%); stroke-linecap: butt; stroke-width: 1.2; fill: rgb(92%,95%,96%); fill-rule: evenodd;"/>
+			<text x="266.830322265625" y="462.89" style="font-family: CJK; font-size: 17px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,925) scale(1,-1)">P06总保险</text>
+			<text x="275.330322265625" y="440.89" style="font-family: CJK; font-size: 17px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,881) scale(1,-1)">P10急停</text>
+			<rect x="435" y="410" width="200" height="95" rx="6" ry="6" style="stroke: rgb(72%,78%,82%); stroke-linecap: butt; stroke-width: 1.2; fill: rgb(92%,95%,96%); fill-rule: evenodd;"/>
+			<text x="482.82958984375" y="462.89" style="font-family: CJK; font-size: 17px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,925) scale(1,-1)">C01 两芯拖线</text>
+			<text x="476.62060546875" y="440.89" style="font-family: CJK; font-size: 17px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,881) scale(1,-1)">24V正 / 返回线</text>
+			<rect x="705" y="410" width="260" height="95" rx="6" ry="6" style="stroke: rgb(72%,78%,82%); stroke-linecap: butt; stroke-width: 1.2; fill: rgb(92%,95%,96%); fill-rule: evenodd;"/>
+			<text x="800.315185546875" y="462.89" style="font-family: CJK; font-size: 17px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,925) scale(1,-1)">P04 降压</text>
+			<text x="790.03466796875" y="440.89" style="font-family: CJK; font-size: 17px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,881) scale(1,-1)">24V → 12V</text>
+			<path d="M 190,457 L 230,457 Z" style="stroke: rgb(74%,41%,12%); stroke-linecap: butt; stroke-width: 2.2;"/>
+			<polygon points="230 457, 220 461.5, 220 452.5" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(74%,41%,12%); fill-rule: evenodd;"/>
+			<path d="M 385,457 L 435,457 Z" style="stroke: rgb(74%,41%,12%); stroke-linecap: butt; stroke-width: 2.2;"/>
+			<polygon points="435 457, 425 461.5, 425 452.5" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(74%,41%,12%); fill-rule: evenodd;"/>
+			<path d="M 635,457 L 705,457 Z" style="stroke: rgb(74%,41%,12%); stroke-linecap: butt; stroke-width: 2.2;"/>
+			<polygon points="705 457, 695 461.5, 695 452.5" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(74%,41%,12%); fill-rule: evenodd;"/>
+			<rect x="705" y="260" width="260" height="80" rx="6" ry="6" style="stroke: rgb(72%,78%,82%); stroke-linecap: butt; stroke-width: 1.2; fill: rgb(92%,95%,96%); fill-rule: evenodd;"/>
+			<text x="757.657470703125" y="294.39" style="font-family: CJK; font-size: 17px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,588) scale(1,-1)">P07保险 → E02驱动</text>
+			<rect x="705" y="120" width="260" height="80" rx="6" ry="6" style="stroke: rgb(72%,78%,82%); stroke-linecap: butt; stroke-width: 1.2; fill: rgb(92%,95%,96%); fill-rule: evenodd;"/>
+			<text x="764.4931640625" y="154.39" style="font-family: CJK; font-size: 17px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,308) scale(1,-1)">M01 两台12V电机</text>
+			<path d="M 835,410 L 835,340 Z" style="stroke: rgb(74%,41%,12%); stroke-linecap: butt; stroke-width: 2.2;"/>
+			<polygon points="835 340, 839.5 350, 830.5 350" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(74%,41%,12%); fill-rule: evenodd;"/>
+			<path d="M 835,260 L 835,200 Z" style="stroke: rgb(74%,41%,12%); stroke-linecap: butt; stroke-width: 2.2;"/>
+			<polygon points="835 200, 839.5 210, 830.5 210" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(74%,41%,12%); fill-rule: evenodd;"/>
+			<rect x="430" y="260" width="200" height="80" rx="6" ry="6" style="stroke: rgb(72%,78%,82%); stroke-linecap: butt; stroke-width: 1.2; fill: rgb(92%,95%,96%); fill-rule: evenodd;"/>
+			<text x="472.33447265625" y="294.39" style="font-family: CJK; font-size: 17px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,588) scale(1,-1)">P05 12V → 5V</text>
+			<path d="M 720,410 L 720,375 Z" style="stroke: rgb(74%,41%,12%); stroke-linecap: butt; stroke-width: 2.2;"/>
+			<path d="M 720,375 L 530,375 Z" style="stroke: rgb(74%,41%,12%); stroke-linecap: butt; stroke-width: 2.2;"/>
+			<path d="M 530,375 L 530,340 Z" style="stroke: rgb(74%,41%,12%); stroke-linecap: butt; stroke-width: 2.2;"/>
+			<polygon points="530 340, 534.5 350, 525.5 350" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(74%,41%,12%); fill-rule: evenodd;"/>
+			<rect x="405" y="100" width="250" height="95" rx="6" ry="6" style="stroke: rgb(72%,78%,82%); stroke-linecap: butt; stroke-width: 1.2; fill: rgb(92%,95%,96%); fill-rule: evenodd;"/>
+			<text x="455.16845703125" y="152.89" style="font-family: CJK; font-size: 17px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,305) scale(1,-1)">P08逻辑保险 / 分配</text>
+			<text x="422.816162109375" y="130.89" style="font-family: CJK; font-size: 17px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,261) scale(1,-1)">E01主控 / 编码器 / V01视觉</text>
+			<path d="M 530,260 L 530,195 Z" style="stroke: rgb(14%,43%,61%); stroke-linecap: butt; stroke-width: 2.2;"/>
+			<polygon points="530 195, 534.5 205, 525.5 205" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(14%,43%,61%); fill-rule: evenodd;"/>
+			<rect x="35" y="120" width="300" height="175" rx="6" ry="6" style="stroke: rgb(72%,78%,82%); stroke-linecap: butt; stroke-width: 1.2; fill: rgb(92%,95%,96%); fill-rule: evenodd;"/>
+			<text x="72.95190429687499" y="234.89" style="font-family: CJK; font-size: 17px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,469) scale(1,-1)">P11 电解：接驱动VIN与GND</text>
+			<text x="83.10791015624999" y="212.89" style="font-family: CJK; font-size: 17px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,425) scale(1,-1)">P12 100nF：跨接电机两端</text>
+			<text x="50.108154296875" y="190.89" style="font-family: CJK; font-size: 17px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,381) scale(1,-1)">OUT1/OUT2：两根都是电机输出，</text>
+			<text x="108.5" y="168.89" style="font-family: CJK; font-size: 17px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,337) scale(1,-1)">不能直接接系统地。</text>
+			<text x="35" y="340" style="font-family: CJK; font-size: 17px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,680) scale(1,-1)">机器人内部的非隔离逻辑/功率模块需有正</text>
+			<text x="35" y="318" style="font-family: CJK; font-size: 17px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,636) scale(1,-1)">确的公共参考地。</text>
+			<text x="35" y="525" style="font-family: CJKB; font-size: 16px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,1050) scale(1,-1)">管外</text>
+			<text x="705" y="525" style="font-family: CJKB; font-size: 16px;fill: rgb(9%,20%,29%); stroke:none;" transform="translate(0,1050) scale(1,-1)">管内</text>
+			<text x="25" y="22" style="font-family: CJK; font-size: 14px;fill: rgb(32%,40%,46%); stroke:none;" transform="translate(0,44) scale(1,-1)">按“先空载测电压，再逐支路带负载”的顺序调试；急停切24V后图传也可能中断，人工回收用独立绳。</text>
+		</g>
+	</g>
+</svg>

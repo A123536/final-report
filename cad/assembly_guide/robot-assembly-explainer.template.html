@@ -1,0 +1,204 @@
+<div id="vpipe-assembly-explainer">
+  <h3>V型机器人：器材位置与外壳展开</h3>
+  <div class="viz-controls">
+    <label class="form-label">采购项
+      <select class="form-select" id="vpipe-item" aria-label="选择87项采购器材"></select>
+    </label>
+    <div class="viz-row">
+      <button class="btn" type="button" id="vpipe-explode" aria-pressed="false">展开外壳</button>
+      <button class="btn btn-ghost" type="button" id="vpipe-reset">复位视角</button>
+      <label class="form-check"><input class="form-check-input" id="vpipe-pipe" type="checkbox"><span class="form-check-label">管道轮廓</span></label>
+    </div>
+  </div>
+  <div class="vpipe-stage"><canvas id="vpipe-canvas" aria-label="可旋转的127组件原生装配显示模型"></canvas></div>
+  <p id="vpipe-detail" aria-live="polite"></p>
+  <div class="viz-row text-small" aria-label="模型图例">
+    <span><span class="vpipe-swatch" style="background:var(--viz-series-1)"></span>电控</span>
+    <span><span class="vpipe-swatch" style="background:var(--viz-series-2)"></span>传动/电源</span>
+    <span><span class="vpipe-swatch" style="background:var(--viz-series-3)"></span>旧相机包络</span>
+    <span><span class="vpipe-swatch" style="background:var(--viz-series-5)"></span>当前高亮</span>
+    <span class="text-muted">Rev C包络模型；新视觉、夹持座及三路拖线入口待实测改图</span>
+  </div>
+</div>
+<style>
+  #vpipe-assembly-explainer .vpipe-stage { position:relative; width:100%; }
+  #vpipe-assembly-explainer canvas { display:block; width:100%; height:420px; touch-action:none; }
+  #vpipe-assembly-explainer .vpipe-swatch { display:inline-block; width:12px; height:12px; margin-inline-end:5px; vertical-align:middle; }
+  #vpipe-assembly-explainer #vpipe-detail { min-height:2em; color:var(--foreground); }
+  @media(max-width:480px) { #vpipe-assembly-explainer canvas { height:340px; } }
+</style>
+<script type="application/json" id="vpipe-native-data">__NATIVE_JSON__</script>
+<script type="application/json" id="vpipe-guide-data">__GUIDE_JSON__</script>
+<script type="module">
+import * as THREE from 'https://esm.sh/three@0.170.0';
+import { OrbitControls } from 'https://esm.sh/three@0.170.0/examples/jsm/controls/OrbitControls.js?deps=three@0.170.0';
+const root=document.getElementById('vpipe-assembly-explainer');
+const data=JSON.parse(document.getElementById('vpipe-native-data').textContent);
+const guide=JSON.parse(document.getElementById('vpipe-guide-data').textContent);
+const select=root.querySelector('#vpipe-item'),detail=root.querySelector('#vpipe-detail');
+const explodeButton=root.querySelector('#vpipe-explode'),pipeToggle=root.querySelector('#vpipe-pipe');
+const canvas=root.querySelector('#vpipe-canvas');
+let selected='overview',exploded=false,showPipe=false,amount=0,animation=null,pickedShell='';
+const records=new Map(guide.items.map(r=>[r[0],r]));
+const groups=new Map();
+const first=document.createElement('option');first.value='overview';first.textContent='总览：整机位置';select.append(first);
+for(const row of guide.items){
+  if(!groups.has(row[1])){const group=document.createElement('optgroup');group.label=row[1];select.append(group);groups.set(row[1],group);}
+  const option=document.createElement('option');option.value=row[0];option.textContent=row[0]+' '+row[2];groups.get(row[1]).append(option);
+}
+function idsFor(part,name){
+  if(part.startsWith('STM32'))return ['E01'];
+  if(part.startsWith('MC33926'))return ['E02'];
+  if(part.startsWith('RS485'))return ['E05'];
+  if(/^(Gearbox|MotorEnvelope|EncoderEnvelope)/.test(part))return ['M01','M02'];
+  if(/WheelCore|WheelSpoke|OmniRoller/.test(part))return ['M03'];
+  if(part.startsWith('WheelHub'))return ['M04'];
+  if(part.startsWith('Gear25'))return [parseInt(name.split('-').at(-1),10)%2 ? 'M06':'M05'];
+  if(part.startsWith('Gear40'))return ['M07'];
+  if(part.startsWith('Bearing619'))return ['M08'];
+  if(part.startsWith('IdlerBearing'))return ['M09'];
+  if(/^(WheelShaft|CenterAxle)/.test(part))return ['M10'];
+  if(part.startsWith('IdlerShaft'))return ['M11'];
+  if(part.startsWith('TorsionSpring'))return ['S01','S06'];
+  if(part.startsWith('LinkRail'))return ['S02'];
+  if(part.startsWith('CenterStop'))return ['S07'];
+  if(part.startsWith('InsertionLock'))return ['S08'];
+  if(part.startsWith('Buck24'))return ['P04'];
+  if(part.startsWith('FuseTerminal'))return ['P07','P14'];
+  if(part.startsWith('CameraHousing'))return ['F01','V01','V02'];
+  if(part.startsWith('CameraLens'))return ['V02'];
+  if(part.startsWith('POWER_HARNESS'))return ['C08'];
+  if(part.startsWith('SIGNAL_HARNESS'))return ['C09'];
+  if(part.startsWith('M12Gland'))return ['C06'];
+  if(part.startsWith('ExternalTether'))return ['C01','C07'];
+  if(part.startsWith('CableTieBridge'))return ['C10','S10'];
+  if(/Bay_(TopCover|BasePlate)/.test(part))return ['F01'];
+  return [];
+}
+function family(part){
+  if(part.startsWith('Pipe_'))return 'pipe';
+  if(part.startsWith('Camera'))return 'vision';
+  if(/Bay_(TopCover|BasePlate)/.test(part))return 'shell';
+  if(/STM32|MC33926|RS485/.test(part))return 'control';
+  if(/Buck|Fuse|POWER_HARNESS/.test(part))return 'power';
+  if(/Gear25|Gear40/.test(part))return 'gear';
+  if(/Torsion/.test(part))return 'spring';
+  return 'structure';
+}
+const colorProbe=document.createElement('span');colorProbe.hidden=true;root.append(colorProbe);
+function themeColor(token){colorProbe.style.color='var('+token+')';return new THREE.Color(getComputedStyle(colorProbe).color);}
+const colorsFor={control:'--viz-series-1',power:'--viz-series-2',gear:'--viz-series-2',vision:'--viz-series-3',spring:'--viz-series-4',shell:'--muted-foreground',structure:'--muted-foreground',pipe:'--muted-foreground'};
+try {
+  const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setClearAlpha(0);
+  renderer.outputColorSpace=THREE.SRGBColorSpace;
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(35,1,1,2500);camera.up.set(0,0,1);
+  const controls=new OrbitControls(camera,canvas);controls.target.set(30,0,0);controls.enableDamping=false;
+  controls.minDistance=300;controls.maxDistance=1350;controls.enablePan=true;
+  scene.add(new THREE.HemisphereLight(0xffffff,0xffffff,2.1));
+  const light=new THREE.DirectionalLight(0xffffff,2.8);light.position.set(160,-230,350);scene.add(light);
+  const geometryCache=new Map(),meshes=[];
+  for(const [key,values]of Object.entries(data.geometries)){
+    const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(values,3));geometry.computeVertexNormals();geometryCache.set(key,geometry);
+  }
+  const assembly=new THREE.Group();scene.add(assembly);
+  for(const c of data.components){
+    const t=c.transform,kind=family(c.part),isShell=['shell','vision'].includes(kind);
+    const material=new THREE.MeshStandardMaterial({color:themeColor(colorsFor[kind]),roughness:.6,metalness:.12,side:THREE.DoubleSide,transparent:isShell,opacity:isShell ? .32 : 1});
+    const mesh=new THREE.Mesh(geometryCache.get(c.part),material);
+    const base=new THREE.Matrix4().set(t[0],t[3],t[6],t[9], t[1],t[4],t[7],t[10], t[2],t[5],t[8],t[11], 0,0,0,1);
+    mesh.matrixAutoUpdate=false;mesh.matrix.copy(base);
+    let offset=new THREE.Vector3();
+    if(c.part.includes('Bay_TopCover'))offset.set(t[6]*42,t[7]*42,t[8]*42);
+    if(c.part.includes('Bay_BasePlate'))offset.set(-t[6]*34,-t[7]*34,-t[8]*34);
+    if(c.part.startsWith('CameraHousing_Body'))offset.set(22,0,0);
+    if(c.part.startsWith('CameraHousing_FrontBezel'))offset.set(61,0,0);
+    if(c.part.startsWith('CameraLens'))offset.set(66,0,0);
+    mesh.userData={...c,kind,ids:idsFor(c.part,c.name),base,offset};
+    if(kind==='pipe'){
+      const outline=new THREE.LineSegments(new THREE.EdgesGeometry(mesh.geometry,25),new THREE.LineBasicMaterial({color:themeColor('--muted-foreground'),transparent:true,opacity:.2}));
+      outline.matrixAutoUpdate=false;outline.matrix.copy(base);outline.visible=false;scene.add(outline);mesh.userData.outline=outline;mesh.visible=false;
+    }
+    assembly.add(mesh);meshes.push(mesh);
+  }
+  function draw(){renderer.render(scene,camera);}
+  function fitCamera(){
+    const box=new THREE.Box3();
+    for(const m of meshes){if(m.userData.kind==='pipe'&&!showPipe)continue;m.geometry.computeBoundingBox();box.union(m.geometry.boundingBox.clone().applyMatrix4(m.matrix));}
+    const center=box.getCenter(new THREE.Vector3()),direction=camera.position.clone().sub(controls.target).normalize();
+    if(!Number.isFinite(direction.x)||direction.length()<.1)direction.set(.5,-.8,.46).normalize();
+    const right=new THREE.Vector3().crossVectors(direction.clone().negate(),camera.up).normalize();
+    const up=new THREE.Vector3().crossVectors(right,direction.clone().negate()).normalize();
+    const tan=Math.tan(THREE.MathUtils.degToRad(camera.fov/2));
+    let distance=300;const point=new THREE.Vector3();
+    for(const m of meshes){
+      if(m.userData.kind==='pipe'&&!showPipe)continue;
+      const positions=m.geometry.attributes.position;
+      for(let i=0;i<positions.count;i++){
+        point.fromBufferAttribute(positions,i).applyMatrix4(m.matrix).sub(center);
+        const depth=point.dot(direction);
+        distance=Math.max(distance,depth+Math.abs(point.dot(right))/(tan*camera.aspect*.89),depth+Math.abs(point.dot(up))/(tan*.89));
+      }
+    }
+    camera.position.copy(center).addScaledVector(direction,distance);controls.target.copy(center);controls.update();draw();
+  }
+  function reset(){camera.position.set(385,-565,330);controls.target.set(30,0,0);fitCamera();}
+  function describe(){
+    if(selected==='overview'){detail.textContent='前后两只主动轮推进；中心轮与扭簧压壁。可选采购项高亮位置，展开外壳查看内部。';return;}
+    if(selected==='F01'&&pickedShell){detail.textContent=pickedShell+'：采购F01为PETG材料；定位挡舌和紧固件见PDF图03。';return;}
+    const r=records.get(selected),ex=guide.explanations[selected];
+    let suffix='';
+    if(['V01','V02'].includes(selected))suffix='；高亮为旧相机包络，新硬件尚未入模。';
+    else if(selected==='P04')suffix='；显示旧降压占位，不是新板的安装孔位。';
+    else if(!meshes.some(m=>m.userData.ids.includes(selected)))suffix='；未单独入模，位置/连接见PDF图解。';
+    detail.textContent=r[0]+' '+r[2]+'：'+ex[1]+suffix;
+  }
+  function apply(){
+    select.value=selected;pipeToggle.checked=showPipe;
+    explodeButton.setAttribute('aria-pressed',String(exploded));explodeButton.textContent=exploded?'合拢外壳':'展开外壳';
+    const any=meshes.some(m=>m.userData.ids.includes(selected));
+    for(const m of meshes){
+      const info=m.userData,chosen=info.ids.includes(selected),isShell=['shell','vision'].includes(info.kind);
+      m.visible=info.kind!=='pipe';if(info.outline)info.outline.visible=showPipe;
+      m.material.color.copy(themeColor(chosen?'--viz-series-5':colorsFor[info.kind]));
+      m.material.emissive.copy(themeColor(chosen?'--viz-series-5':'--foreground'));m.material.emissiveIntensity=chosen ? .10 : 0;
+      m.material.transparent=isShell||(any&&selected!=='overview'&&!chosen);
+      m.material.opacity=selected==='overview'||!any ? (isShell ? .32 : 1) : (chosen ? 1 : (isShell ? .11 : .25));
+      m.material.depthWrite=!m.material.transparent;
+    }
+    describe();draw();
+  }
+  function transformAt(value){for(const m of meshes){m.matrix.copy(m.userData.base);const o=m.userData.offset;m.matrix.elements[12]+=o.x*value;m.matrix.elements[13]+=o.y*value;m.matrix.elements[14]+=o.z*value;}draw();}
+  function animateExplode(){
+    if(animation)cancelAnimationFrame(animation);
+    const from=amount,to=exploded?1:0,start=performance.now(),duration=matchMedia('(prefers-reduced-motion: reduce)').matches?0:280;
+    const tick=time=>{const p=duration?Math.min(1,(time-start)/duration):1;amount=from+(to-from)*(p*p*(3-2*p));transformAt(amount);if(p<1)animation=requestAnimationFrame(tick);else {fitCamera();root.dataset.pose=exploded?'expanded':'closed';}};
+    animation=requestAnimationFrame(tick);
+  }
+  function save(){if(window.openai?.setWidgetState)window.openai.setWidgetState({modelContent:{item:selected,model:'Rev C；新增视觉尚未入模'},privateContent:{exploded,showPipe}}).catch(()=>{});}
+  function restore(s){const model=s?.modelContent??{},view=s?.privateContent??{};selected=records.has(model.item)?model.item:'overview';exploded=!!view.exploded;showPipe=!!view.showPipe;amount=exploded?1:0;transformAt(amount);root.dataset.pose=exploded?'expanded':'closed';apply();}
+  select.addEventListener('change',()=>{selected=select.value;pickedShell='';apply();save();});
+  explodeButton.addEventListener('click',()=>{exploded=!exploded;apply();animateExplode();save();});
+  pipeToggle.addEventListener('change',()=>{showPipe=pipeToggle.checked;apply();fitCamera();save();});
+  root.querySelector('#vpipe-reset').addEventListener('click',reset);
+  controls.addEventListener('change',draw);
+  const raycaster=new THREE.Raycaster();let down=null;
+  canvas.addEventListener('pointerdown',e=>{down={x:e.clientX,y:e.clientY};});
+  canvas.addEventListener('pointerup',e=>{
+    if(!down||Math.hypot(e.clientX-down.x,e.clientY-down.y)>5)return;
+    const r=canvas.getBoundingClientRect();raycaster.setFromCamera(new THREE.Vector2((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1),camera);
+    const hit=raycaster.intersectObjects(meshes.filter(m=>m.visible&&m.userData.kind!=='pipe')).find(h=>h.object.userData.ids.length);
+    if(hit){
+      selected=hit.object.userData.ids[0];const part=hit.object.userData.part;
+      pickedShell=part.startsWith('PowerBay_Top')?'外壳E-01 电源舱上盖':part.startsWith('PowerBay_Base')?'外壳E-02 电源舱底板':part.startsWith('ControlBay_Top')?'外壳E-03 控制舱上盖':part.startsWith('ControlBay_Base')?'外壳E-04 控制舱底板':part.startsWith('CameraHousing_Body')?'外壳E-05 相机主体':part.startsWith('CameraHousing_Front')?'外壳E-06 相机前盖':'';
+      apply();save();
+    }
+  });
+  const resize=()=>{const r=canvas.getBoundingClientRect();if(!r.width||!r.height)return;renderer.setSize(r.width,r.height,false);camera.aspect=r.width/r.height;camera.updateProjectionMatrix();fitCamera();};
+  new ResizeObserver(resize).observe(canvas);reset();restore(window.openai?.widgetState);resize();
+  window.addEventListener('openai:set_globals',e=>{if(e.detail?.globals?.widgetState)restore(e.detail.globals.widgetState);});
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change',apply);
+  root.dataset.ready='true';
+}catch(error){detail.setAttribute('role','alert');detail.textContent='三维视图未能启动：'+error.message+'。完整模型与接线说明可查看配套PDF。';root.dataset.error=String(error);}
+</script>
