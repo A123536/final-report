@@ -1,0 +1,318 @@
+{
+  "model_version": "2026-10-13",
+  "selected_on": "2026-11-03",
+  "status": "current",
+  "selection": "User selected the supplied 2026-10-13 ZIP as the current model, regardless of file dates.",
+  "source_archive": "cad/releases/V型管道检测机器人_3D模型_2026-10-13.zip",
+  "source_sha256": "d4a938951718ae97c86ed2baf7becf2b323a640dbb8b1bca75bc7cd247c3e439",
+  "assembly": "cad/solidworks/model/V_Pipe_Robot_Concept_ID150.SLDASM",
+  "neutral_step": "cad/solidworks/model/V_Pipe_Robot_Concept_ID150.STEP",
+  "drawing": "cad/solidworks/model/V_Pipe_Robot_Concept_ID150_GA.SLDDRW",
+  "previous_revision": "6ad93463daccba81145dd6c9fa55dd463d4a2adb",
+  "file_count": 50,
+  "unique_part_count": 38,
+  "top_level_component_count": 118,
+  "verification": "All 50 imported files match the source archive bytes. Original audit records are preserved; no new SOLIDWORKS rebuild or interference audit was performed.",
+  "files": [
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/00_发送老师前请阅读.txt",
+      "path": "cad/solidworks/model/00_发送老师前请阅读.txt",
+      "bytes": 1473,
+      "sha256": "c9b9ba9275e41a390c8f3de51a5fc714ce0f6556e274da56817046f5f40d1efe"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Documentation/assembly_and_procurement.md",
+      "path": "design/assembly_and_procurement.md",
+      "bytes": 7830,
+      "sha256": "43cfd3156db5cf2504337c9dde3d066d14f079c54425cc8e4b34bcdbada27093"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Documentation/basic_mechanical_scheme.md",
+      "path": "design/basic_mechanical_scheme.md",
+      "bytes": 10961,
+      "sha256": "4ef8f0e1dcf263a08906efe6f94b1e98cbbabba20e5ff18921e53de35348c381"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Documentation/HARNESS_PART_MAPPING.txt",
+      "path": "cad/solidworks/model/HARNESS_PART_MAPPING.txt",
+      "bytes": 219,
+      "sha256": "d6357c61f031bb10fe44d5c032993496317134d80fa87b853032448dc46a403b"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Documentation/MODEL_VALIDATION.txt",
+      "path": "cad/solidworks/model/MODEL_VALIDATION.txt",
+      "bytes": 524,
+      "sha256": "4f169a51f5e3237b138fd24704fa66ce5d13bf56cc07e77eec772c07fb465cff"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Documentation/SOLIDWORKS_ASSEMBLY_AUDIT.txt",
+      "path": "cad/solidworks/model/SOLIDWORKS_ASSEMBLY_AUDIT.txt",
+      "bytes": 3120,
+      "sha256": "85d8fef2818dc5f678fa53e0a89396b24e613fd84f627743add7e61acfcff878"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/V_Pipe_Robot_Concept_ID150_GA.SLDDRW",
+      "path": "cad/solidworks/model/V_Pipe_Robot_Concept_ID150_GA.SLDDRW",
+      "bytes": 389871,
+      "sha256": "4827deb9b8feb07c8ccb476666c07e51aecc13ec4ba833862d41073d108162da"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/V_Pipe_Robot_Concept_ID150.SLDASM",
+      "path": "cad/solidworks/model/V_Pipe_Robot_Concept_ID150.SLDASM",
+      "bytes": 201876,
+      "sha256": "a00b2375f7a8c4960834606421c6570c5709366331061ef104cc39d2d6995182"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/parts/BearingEnvelope_22x8x7.SLDPRT",
+      "path": "cad/solidworks/model/parts/BearingEnvelope_22x8x7.SLDPRT",
+      "bytes": 71100,
+      "sha256": "d9816870089cebbad9a6b3cb563e5c1ae28761734cd0caf39424089f76508d18"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/parts/Buck24to12_65x42x17.SLDPRT",
+      "path": "cad/solidworks/model/parts/Buck24to12_65x42x17.SLDPRT",
+      "bytes": 57494,
+      "sha256": "ae8c5227e9ffb3879af930dc515f1b2db4ab2da1fa4b5b2fe4b6915eb2fb8a69"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/parts/CableTieBridge_10x76x5.SLDPRT",
+      "path": "cad/solidworks/model/parts/CableTieBridge_10x76x5.SLDPRT",
+      "bytes": 49781,
+      "sha256": "ae4055826b2471c1a97df3a22d588d593698281255ab2d335b4e89b3fc3e30da"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/parts/CameraLensEnvelope_D18_L7.SLDPRT",
+      "path": "cad/solidworks/model/parts/CameraLensEnvelope_D18_L7.SLDPRT",
+      "bytes": 67179,
+      "sha256": "0c31c60e68354fbba44ee1ec6dbcb477f5a997fdef658ebf58c32cb10635c431"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/parts/CenterAxle_D10_L92.SLDPRT",
+      "path": "cad/solidworks/model/parts/CenterAxle_D10_L92.SLDPRT",
+      "bytes": 66053,
+      "sha256": "d25845f6b9773cb6f5bc8ced8cae363a74c68e8318701e512d08dc67ca50ae7e"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/parts/CenterStopTab_12x9x18.SLDPRT",
+      "path": "cad/solidworks/model/parts/CenterStopTab_12x9x18.SLDPRT",
+      "bytes": 59942,
+      "sha256": "d831002a3ef0b2602c0ad1172dcdc6804ee2394cddbaa8edb63128864d515236"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/parts/DrivenWheel_D60_W28.SLDPRT",
+      "path": "cad/solidworks/model/parts/DrivenWheel_D60_W28.SLDPRT",
+      "bytes": 70091,
+      "sha256": "365716c686a33bec13531d79e20b800475a603d9167ba992d5314fa7285430d3"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/parts/EncoderEnvelope_D33p8_L13p8.SLDPRT",
+      "path": "cad/solidworks/model/parts/EncoderEnvelope_D33p8_L13p8.SLDPRT",
+      "bytes": 66807,
+      "sha256": "80ec5026a38c5b5bf28f07a02180b15ba7761cb18adb308e51dad56f701e8595"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/parts/EquipmentBay_92x64x30.SLDPRT",
+      "path": "cad/solidworks/model/parts/EquipmentBay_92x64x30.SLDPRT",
+      "bytes": 58883,
+      "sha256": "27d7d014c558ced40271e3adf61ed7fe44b31bba85a3e1acaafd08f58162c841"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/parts/ExternalTether_D7_L30.SLDPRT",
+      "path": "cad/solidworks/model/parts/ExternalTether_D7_L30.SLDPRT",
+      "bytes": 71383,
+      "sha256": "51a8e6d10a0c8dd37ac0f5af667a3595732009aa0cf972652f3cec2e9d792019"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/parts/FuseTerminal_24x16x12.SLDPRT",
+      "path": "cad/solidworks/model/parts/FuseTerminal_24x16x12.SLDPRT",
+      "bytes": 58080,
+      "sha256": "0757669f7d143643f13d6a8a4f461af3a3c5bdba8a1c42eb364e8746fadbafbf"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/parts/FutureCameraBay_50x48x32.SLDPRT",
+      "path": "cad/solidworks/model/parts/FutureCameraBay_50x48x32.SLDPRT",
+      "bytes": 59207,
+      "sha256": "9ac600f4e52f5f0dc09a441d38e5f443a27689cbffe872e558a82909aea845a2"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/parts/Gear25T_m1_Envelope_D27_ID6_W7.SLDPRT",
+      "path": "cad/solidworks/model/parts/Gear25T_m1_Envelope_D27_ID6_W7.SLDPRT",
+      "bytes": 74379,
+      "sha256": "7e6fcaa4bc7ec482de1f3cd7a936731a359c62b8fe8ef00d5b1eff6e9f774c97"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/parts/Gear40T_m1_Envelope_D42_ID8_W7.SLDPRT",
+      "path": "cad/solidworks/model/parts/Gear40T_m1_Envelope_D42_ID8_W7.SLDPRT",
+      "bytes": 72619,
+      "sha256": "f14db2b47491b56e6c6fbff277364c3d124bc107369b5eeae929ef21808f8ad8"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/parts/GearboxEnvelope_D37_L24.SLDPRT",
+      "path": "cad/solidworks/model/parts/GearboxEnvelope_D37_L24.SLDPRT",
+      "bytes": 70016,
+      "sha256": "e7c13c63ef97cc29ef21a9f6a3e44d656791d768e412caf9a3d17537a3b069a8"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/parts/InsertionLockPin_D4_L84.SLDPRT",
+      "path": "cad/solidworks/model/parts/InsertionLockPin_D4_L84.SLDPRT",
+      "bytes": 60729,
+      "sha256": "51cbfae47c401d97ce1e74a749545fc7a9f55f412ae6bc7c52e3d2072608a4d3"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/parts/LinkRail_122x7x16.SLDPRT",
+      "path": "cad/solidworks/model/parts/LinkRail_122x7x16.SLDPRT",
+      "bytes": 57191,
+      "sha256": "4ecac808f4294ae962416c167f060549155308317e197823a4aab18dd296a06c"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/parts/M12GlandEnvelope_D14_L15.SLDPRT",
+      "path": "cad/solidworks/model/parts/M12GlandEnvelope_D14_L15.SLDPRT",
+      "bytes": 68925,
+      "sha256": "0bbfae79f3a9db1d4c6bb7f5312caf0b956e166c656c778972cbca208ca8d3c9"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/parts/M3Boss_D3p2_L21.SLDPRT",
+      "path": "cad/solidworks/model/parts/M3Boss_D3p2_L21.SLDPRT",
+      "bytes": 65660,
+      "sha256": "eb5f6fa82a624baa26ee80aa5eaf9c70fd5cd7d975b03e03b4c93ea585d9482b"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/parts/M3CameraMount_D3p2_L7.SLDPRT",
+      "path": "cad/solidworks/model/parts/M3CameraMount_D3p2_L7.SLDPRT",
+      "bytes": 68551,
+      "sha256": "63e5150a389cfcefe5c75a255e3235f84e4b5f8cd0469cb29bef3c575000a17e"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/parts/MC33926_50x30x12.SLDPRT",
+      "path": "cad/solidworks/model/parts/MC33926_50x30x12.SLDPRT",
+      "bytes": 57702,
+      "sha256": "58c13b5b55ad11ea6dda25bd0c58207922d0f4222805825aa4ff9c28d6732b25"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/parts/MotorEnvelope_D32p7_L21p7.SLDPRT",
+      "path": "cad/solidworks/model/parts/MotorEnvelope_D32p7_L21p7.SLDPRT",
+      "bytes": 70224,
+      "sha256": "ff2841626f39aa23ace5d506e363efc46c5e7a3948b711c5af63b5b7eb9bbbed"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/parts/OmniRoller_D6_L8.SLDPRT",
+      "path": "cad/solidworks/model/parts/OmniRoller_D6_L8.SLDPRT",
+      "bytes": 73685,
+      "sha256": "8ae317ac7ed99dd5571705a7cfa2c3ba8dabd6ccb6eead33c90e42bb1367a3c2"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/parts/PassiveWheel_D60_W28.SLDPRT",
+      "path": "cad/solidworks/model/parts/PassiveWheel_D60_W28.SLDPRT",
+      "bytes": 68578,
+      "sha256": "e4516777c499285f3d79a85d3b9d6d089a7e36be8d46b87feee7445507f67277"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/parts/Pipe_ID150_OD154_L430.SLDPRT",
+      "path": "cad/solidworks/model/parts/Pipe_ID150_OD154_L430.SLDPRT",
+      "bytes": 72583,
+      "sha256": "285d12c782d1280505f17eae05e3036dda2029ee88aa4a95f1fc29d6e16e4772"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/parts/POWER_HARNESS_D4p4_L115p6_0.SLDPRT",
+      "path": "cad/solidworks/model/parts/POWER_HARNESS_D4p4_L115p6_0.SLDPRT",
+      "bytes": 62724,
+      "sha256": "f13271bc776e8dbae2a9ca61c807ffab07cbae109921f53c2c4c6e3d46145796"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/parts/POWER_HARNESS_D4p4_L60p4_2.SLDPRT",
+      "path": "cad/solidworks/model/parts/POWER_HARNESS_D4p4_L60p4_2.SLDPRT",
+      "bytes": 63978,
+      "sha256": "0efeed9fd98a4e70dd18d01a506bbadd73c97e8aa5890aaa6052ac5439710e35"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/parts/POWER_HARNESS_D4p4_L61p0_1.SLDPRT",
+      "path": "cad/solidworks/model/parts/POWER_HARNESS_D4p4_L61p0_1.SLDPRT",
+      "bytes": 63985,
+      "sha256": "bf78146e93a528d285e270470a8e8e56303e1ad6a0cc3679bb913debab624aab"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/parts/POWER_HARNESS_D4p4_L93p3_3.SLDPRT",
+      "path": "cad/solidworks/model/parts/POWER_HARNESS_D4p4_L93p3_3.SLDPRT",
+      "bytes": 62992,
+      "sha256": "94084fd92aa2fe5a24c59c3b64e22e51e0bf7a3ba79ce0433d756b2eb63db2a5"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/parts/RS485_25x18x9.SLDPRT",
+      "path": "cad/solidworks/model/parts/RS485_25x18x9.SLDPRT",
+      "bytes": 57748,
+      "sha256": "a1afa10904927bfd77a6be3f35a77f3e80bfa27d2662a8bd801a80932fbc93a0"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/parts/SIGNAL_HARNESS_D3p2_L114p4_0.SLDPRT",
+      "path": "cad/solidworks/model/parts/SIGNAL_HARNESS_D3p2_L114p4_0.SLDPRT",
+      "bytes": 61499,
+      "sha256": "d121796caaca2daa7c56e80e5d5aa615cea3712fe1cce0fe1d27772bc982060c"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/parts/SIGNAL_HARNESS_D3p2_L64p1_2.SLDPRT",
+      "path": "cad/solidworks/model/parts/SIGNAL_HARNESS_D3p2_L64p1_2.SLDPRT",
+      "bytes": 63467,
+      "sha256": "c23d5dcef1d350559bac8b29b3aaff99c8304f6ddfdc6b6e06ff3b39f1f3ad2f"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/parts/SIGNAL_HARNESS_D3p2_L64p4_1.SLDPRT",
+      "path": "cad/solidworks/model/parts/SIGNAL_HARNESS_D3p2_L64p4_1.SLDPRT",
+      "bytes": 63140,
+      "sha256": "dad550a603487b1ee680d1d3a3f6f9dfcfded38d4927da07ebf7adf0323573b5"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/parts/SIGNAL_HARNESS_D3p2_L93p3_3.SLDPRT",
+      "path": "cad/solidworks/model/parts/SIGNAL_HARNESS_D3p2_L93p3_3.SLDPRT",
+      "bytes": 62315,
+      "sha256": "6870df3df12d806e7a6e1fedaf96b8c1f5d58fc963907120ee1281454d6b52d4"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/parts/STM32F411_53x22x10.SLDPRT",
+      "path": "cad/solidworks/model/parts/STM32F411_53x22x10.SLDPRT",
+      "bytes": 58418,
+      "sha256": "1874a4e4296d5143ed7cec943b1485e70ac41cf7cbecb06ab0bce56abde04abc"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/parts/TorsionSpringEnvelope_OD38_ID12_W6p4.SLDPRT",
+      "path": "cad/solidworks/model/parts/TorsionSpringEnvelope_OD38_ID12_W6p4.SLDPRT",
+      "bytes": 72963,
+      "sha256": "9bda792049a17eb909546065ac3a48a608d55f249948c49e1f98f3c5d9542649"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/parts/WheelHub_D18_L36.SLDPRT",
+      "path": "cad/solidworks/model/parts/WheelHub_D18_L36.SLDPRT",
+      "bytes": 71805,
+      "sha256": "84f59e77b22379460daf968c8f97c929ee94d4fa9845bc339545b543c930ef5c"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Native_SOLIDWORKS_2026/parts/WheelShaft_D8_L74.SLDPRT",
+      "path": "cad/solidworks/model/parts/WheelShaft_D8_L74.SLDPRT",
+      "bytes": 66408,
+      "sha256": "14655a413a3f03cd89c6f36b23087024ea6ba2dcaf970fa17820f6290730b1c9"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Neutral_STEP/V_Pipe_Robot_Concept_ID150.STEP",
+      "path": "cad/solidworks/model/V_Pipe_Robot_Concept_ID150.STEP",
+      "bytes": 787863,
+      "sha256": "52ebb5dae83b120969909baf1e750622e7176b7df392e799d65f0565e140ff8d"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Preview/general_arrangement.png",
+      "path": "cad/solidworks/model/general_arrangement.png",
+      "bytes": 7303,
+      "sha256": "2d9af9785a1ae99f37df6d630b94869c3518f675dcdd24cd5d7b3c6e7349569f"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Preview/overview_robot_only.png",
+      "path": "cad/solidworks/model/overview_robot_only.png",
+      "bytes": 138024,
+      "sha256": "b662f54385755abd0732edb939d4a888e02d45f5fb5e33c7feb3c35f24f25665"
+    },
+    {
+      "archive_entry": "V型管道检测机器人_3D模型/Preview/overview_with_pipe.png",
+      "path": "cad/solidworks/model/overview_with_pipe.png",
+      "bytes": 169575,
+      "sha256": "5b6a2a584f48278f0c38266d6e2bb822e2db22e0bfe5122f2b981daed06ef872"
+    }
+  ]
+}

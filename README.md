@@ -2,12 +2,25 @@
 
 本仓库保存一套面向 `140–160 mm` 内径水平直管的有线 V 型检测机器人方案。当前基线覆盖机械架构、二维准静态仿真、概念级三维布置和初步采购规划；尚未完成制造级 CAD、控制固件和物理样机验证。
 
+## 当前采用版本
+
+2026-11-03 按用户指定，将 **2026-10-13 的三维模型交付包**设为当前最新版。这里的“最新版”指当前选定基线，不按文件日期排序。
+
+- [原始完整 ZIP](cad/releases/V型管道检测机器人_3D模型_2026-10-13.zip)：与桌面提供的压缩包逐字节一致。
+- [SOLIDWORKS 主装配](cad/solidworks/model/V_Pipe_Robot_Concept_ID150.SLDASM)：118 个顶层组件、38 个独立零件；零件位于同级 `parts/`。
+- [通用 STEP 模型](cad/solidworks/model/V_Pipe_Robot_Concept_ID150.STEP)及 [A3 总布置图](cad/solidworks/model/V_Pipe_Robot_Concept_ID150_GA.SLDDRW)。
+- [版本与文件校验清单](cad/solidworks/CURRENT_MODEL.json)：记录原包 SHA-256、50 个文件的对应路径和校验值。
+
+主模型、零件、预览图、原有验证记录，以及 `design/basic_mechanical_scheme.md`、`design/assembly_and_procurement.md` 均取自该包。118 个组件和显示状态来自包内原有审计记录，本次只核验文件完整性，没有重新执行 SOLIDWORKS 重建或干涉检查。
+
+10 月 28 日的可打印外壳、87 项采购清单及装配图解属于历史修订，不代表本次选定模型。此前完整版本保留在 [提交 6ad9346](https://github.com/A123536/final-report/tree/6ad93463daccba81145dd6c9fa55dd463d4a2adb)，后续如需重新采用可从历史恢复。
+
 ## 当前方案
 
 - 三只直径 `60 mm` 的全向轮，前后轮主动驱动，中心轮被动压壁。
 - 两根轴间距 `150 mm` 的连杆构成 V 型机构，中心关节使用左右镜像扭簧。
 - 机械限位为 `90°–125°`，目标整机质量 `1.6 kg`，上限 `1.8 kg`。
-- 两台 JGB37-520 编码减速电机通过模数 1 的 25T 电机齿轮、25T 惰轮和 40T 轮轴齿轮驱动，总减速比为 1.6:1。
+- 两台 JGB37-520 编码减速电机通过模数 1 的 25T/40T 齿轮副驱动，理论中心距 `32.5 mm`，减速比为 1.6:1。
 - 目标巡航速度 `0.15 m/s`，目标管内行程 `10 m`，拖线总长 `15 m`。
 - 计划采用地面端 24 V 供电、机器人端 12 V/5 V 降压、STM32F411 控制和 RS-485 通信。
 
@@ -18,6 +31,7 @@ cad/
   v_pipe_robot_concept.py       概念级三维包络和图片生成脚本
   outputs/                      GLB、渲染图和模型元数据
   solidworks/                   SOLIDWORKS 2026 原生装配、零件及生成工具
+  releases/                     用户选定的原始模型交付 ZIP
 design/
   basic_mechanical_scheme.md    机械方案与第二轮仿真结论
   assembly_and_procurement.md   装配、接线和采购建议
@@ -26,15 +40,17 @@ simulation/
   results/                      CSV、JSON 和仿真图表
 ```
 
-`simulation/results/` 和 `cad/outputs/` 是当前设计基线的一部分，因此纳入版本控制。`.codex_tmp/` 只包含资料提取、中间渲染和临时 Python 依赖，不纳入版本控制。
+`simulation/results/` 和 `cad/outputs/` 保留已有仿真、GLB 和渲染结果；本次没有按归档模型重新生成这些派生文件，当前三维外形以 `cad/solidworks/model/` 中的原生文件、STEP 和预览为准。`.codex_tmp/` 存放临时文件及切换前的本地模型备份，不纳入版本控制。
 
-SOLIDWORKS 主装配体位于 `cad/solidworks/model/V_Pipe_Robot_Concept_ID150.SLDASM`。其 `ID150_NOMINAL` 配置包含 `ROBOT_ONLY` 与 `WITH_PIPE` 两个显示状态；修订模型已完成 140、150、160 mm 三种姿态的实体干涉检查，非预期干涉为零，但仍属于概念包络，不能直接作为加工放行文件。
+SOLIDWORKS 主装配体位于 `cad/solidworks/model/V_Pipe_Robot_Concept_ID150.SLDASM`。包内记录其 `ID150_NOMINAL` 配置包含 `ROBOT_ONLY` 与 `WITH_PIPE` 两个显示状态。当前版采用 `92 × 64 × 30 mm` 设备舱包络和 `50 × 48 × 32 mm` 相机预留包络，属于概念模型。
 
-电子设备外壳已改为六件 FDM/PETG 样机零件：电源舱上盖/底板、控制舱上盖/底板、相机主体/前盖。拼接方案见 `design/printable_enclosure_joint_plan.md`；原生爆炸装配、合盖装配、七页 A3 分件图、PDF、分件 STEP 及已定向的毫米 STL 位于 `cad/solidworks/model/printable_enclosure/`。主装配现有 127 个组件、50 个唯一引用零件。打印前需校准所用机器的定位间隙和所购热熔螺母底孔。
+历史六件 FDM/PETG 外壳及其三种管径干涉检查结果属于后续修订，未包含在当前选定 ZIP 中；相关历史方案见 `design/printable_enclosure_joint_plan.md`，原生模型和打印文件可从上述历史提交获取。
 
-2026-10-28采购清单对应的87项器材说明见 `design/assembly_guide_20261028.md`；`cad/assembly_guide/` 包含8张模型/连接图和完整PDF。模型显示网格从原生装配只读导出，未改变CAD；新增Luckfox、实际板卡、机架夹持和三路拖线入口仍需按实物完成安装设计。采购编号 `E01` 与外壳图号 `E-01` 含义不同。
+历史 2026-10-28 采购清单对应的 87 项器材说明见 `design/assembly_guide_20261028.md`；`cad/assembly_guide/` 保留当时的 8 张模型/连接图和 PDF，它们基于后续修订模型，不能当作当前版的装配依据。
 
 ## 环境与运行
+
+以下脚本保留仓库已有实现，并未随归档模型回退；运行生成器不能保证复现当前 ZIP。查看当前版请直接使用上方交付文件。
 
 建议使用 Python 3.12 创建独立虚拟环境：
 

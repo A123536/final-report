@@ -1,37 +1,28 @@
 V 型直管检测机器人三维模型交付说明
 
 1. 推荐查看方式
-   - SOLIDWORKS 2026：打开 model\V_Pipe_Robot_Concept_ID150.SLDASM。
-   - 其他 CAD 软件：打开 model\V_Pipe_Robot_Concept_ID150.STEP。
-   - A3 总布置图：model\V_Pipe_Robot_Concept_ID150_GA.SLDDRW。
-   - 外壳七页拆分图：model\printable_enclosure\Printable_Enclosure_Split_A3.SLDDRW 或同名 PDF。
-   - 打印文件：model\printable_enclosure\STL_mm，共六件，毫米单位、已设置打印方向。
-   - 本说明若直接位于仓库 model 目录中，上述路径省略开头的 model\。
+   - SOLIDWORKS 2026 或更高版本：打开 Native_SOLIDWORKS_2026\V_Pipe_Robot_Concept_ID150.SLDASM。
+   - 其他 CAD 软件或较旧版本：打开 Neutral_STEP\V_Pipe_Robot_Concept_ID150.STEP。
+   - A3 总布置图：Native_SOLIDWORKS_2026\V_Pipe_Robot_Concept_ID150_GA.SLDDRW。
 
 2. 方案基准
    - 目标管道内径：140-160 mm；当前三维装配为 150 mm 标称姿态。
    - 全向轮包络：直径 60 mm、宽度 28 mm。
    - 连杆轴间距：150 mm。
    - 标称 V 角：108.757667°；机械限位：90°-125°。
-   - 模数 1 的25T电机齿轮、25T惰轮和40T轮轴齿轮，总减速比1.6。
-   - 电机—惰轮中心距25.0 mm；惰轮—轮轴中心距32.5 mm。
-   - 设备舱：72 x 62 x 22 mm上盖+2.4 mm底板，含螺柱总宽69 mm；相机主体50 x 48 x 32 mm+2.4 mm前盖。
-   - 六件式PETG外壳采用短挡舌定位、热熔螺母和可拆螺钉拼接。
-   - 设备舱M3x10螺钉必须为低圆头，头径<=5.7 mm、头高<=1.7 mm，以避让编码器。
+   - 25/40 齿、模数 1 外置减速级，理论中心距 32.5 mm。
+   - 设备舱包络：92 x 64 x 30 mm；相机预留：50 x 48 x 32 mm。
 
 3. SOLIDWORKS 模型
    - 配置：ID150_NOMINAL。
    - 显示状态 ROBOT_ONLY：隐藏管道，方便查看机器人结构。
    - 显示状态 WITH_PIPE：显示透明的 150 mm 管道包络。
-   - 装配体包含127个顶层组件、50个唯一引用零件，所有引用零件均放在parts子目录中。
-   - 140、150、160 mm三种姿态均完成SOLIDWORKS实体干涉检查，非预期干涉为零。
+   - 装配体包含 118 个顶层组件，所有引用零件均放在 parts 子目录中。
 
 4. 重要边界
-   本模型是经过干涉修订的概念级三维包络，不是加工放行模型。全向轮滚子、扭簧线圈和弹簧腿、
-   模数1齿轮齿形、板卡安装孔以及部分外购件外形仍需在采购后按实测尺寸替换。
+   本模型是概念级三维包络，不是加工放行模型。全向轮滚子、扭簧线圈和弹簧腿、
+   模数 1 齿轮齿形、板卡安装孔以及部分外购件外形仍需在采购后按实测尺寸替换。
    当前模型不得直接用于批量加工。
-   六件外壳可用于PETG试打和拼接验证；热熔底孔、定位间隙需用所用打印机校准。
-   板卡实测安装孔、机架夹持、温升与密封仍待详细设计和实物验证。
 
 5. 文件完整性
    请解压整个 ZIP 后再打开装配体，不要只单独复制 SLDASM，否则可能丢失零件引用。

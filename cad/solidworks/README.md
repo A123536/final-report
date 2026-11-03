@@ -1,47 +1,28 @@
-# SOLIDWORKS 概念装配
+# SOLIDWORKS 当前模型
 
-`GenerateSolidWorksConcept.cs` 使用本机 SOLIDWORKS 2026 API 生成原生 `SLDPRT` 和 `SLDASM` 文件。模型严格复用 `cad/v_pipe_robot_concept.py` 的 150 mm 标称管径包络参数。
-
-输出目录 `model/` 包含装配体、零件库和尺寸验证记录。以下对象仍是设计包络而非制造模型：
-
-- φ60×28 mm 全向轮及滚子；
-- 扭簧线圈和弹簧腿；
-- 模数 1 的 25T 电机齿轮、25T 惰轮和 40T 轮轴齿轮齿形；
-- 电机、板卡及安装孔；
-- 透明管道采用 2 mm 可视化壁厚。
-
-这些对象必须在实物采购和测量后再替换，不能直接据此加工。
+2026-11-03 按用户指定，当前最新版采用桌面提供的 **2026-10-13 三维模型 ZIP**。原始交付包保存于 [cad/releases](../releases/V型管道检测机器人_3D模型_2026-10-13.zip)；版本选择、50 个文件的映射及 SHA-256 记录在 [CURRENT_MODEL.json](CURRENT_MODEL.json)。文件日期较旧不影响此次版本选择。
 
 ## 当前交付物
 
-- `model/V_Pipe_Robot_Concept_ID150.SLDASM`：主装配体，共127个顶层组件、50个唯一引用零件。
-- `model/parts/*.SLDPRT`：独立原生零件和器件包络。
-- `model/MODEL_VALIDATION.txt`：关键几何参数检查记录。
-- `model/SOLIDWORKS_ASSEMBLY_AUDIT.txt`：组件清单及显示状态审计。
-- `model/INTERFERENCE_VALIDATION.md`：140/150/160 mm 实体干涉、管壁包络和关闭提示验证记录。
-- `model/REFERENCED_PARTS_ID150.txt`：标称装配实际引用的零件清单。
-- `model/overview_with_pipe.png`：透明管道内的装配效果。
-- `model/overview_robot_only.png`：隐藏管道后的机器人装配效果。
-- `model/V_Pipe_Robot_Concept_ID150_GA.SLDDRW`：A3 总布置工程图，包含 V 型侧向、横向和等轴测视图。
-- `model/general_arrangement.png`：总布置工程图预览。
-- `model/printable_enclosure/Printable_Enclosure_Exploded_ID150.SLDASM`：六件式外壳爆炸摆放装配。
-- `model/printable_enclosure/Printable_Enclosure_Assembled_ID150.SLDASM`：外壳实际对合装配，用于拼接检查。
-- `model/printable_enclosure/Printable_Enclosure_Split_A3.SLDDRW`：七页 A3 图纸，总图和六件分件视图、外形及孔位表；同目录有 PDF。
-- `model/printable_enclosure/STL_mm/`：六件按打印方向摆好的毫米 STL。
-- `model/printable_enclosure/STEP_parts/`：六件设计坐标下的 STEP。
-- `../../design/printable_enclosure_joint_plan.md`：FDM/PETG 拼接、紧固、打印和装配说明。
+- [model/V_Pipe_Robot_Concept_ID150.SLDASM](model/V_Pipe_Robot_Concept_ID150.SLDASM)：SOLIDWORKS 2026 原生主装配。
+- `model/parts/`：原包中的 38 个独立零件，随装配整体保留。
+- [model/V_Pipe_Robot_Concept_ID150.STEP](model/V_Pipe_Robot_Concept_ID150.STEP)：通用中性格式。
+- [model/V_Pipe_Robot_Concept_ID150_GA.SLDDRW](model/V_Pipe_Robot_Concept_ID150_GA.SLDDRW)：A3 总布置图。
+- `model/overview_robot_only.png`、`model/overview_with_pipe.png`、`model/general_arrangement.png`：该包原有预览。
+- `model/MODEL_VALIDATION.txt`、`model/SOLIDWORKS_ASSEMBLY_AUDIT.txt`、`model/HARNESS_PART_MAPPING.txt`：该包原有参数和组件审计记录。
+- `model/00_发送老师前请阅读.txt`：原交付说明。
+- `../../design/basic_mechanical_scheme.md`、`../../design/assembly_and_procurement.md`：该包配套的机械方案和采购文档。
 
-主装配体默认隐藏管道，方便继续编辑内部结构。在特征树中选择 `Pipe_ID150_OD154_L430` 并执行“显示”即可恢复透明管道。
+原包中的 `Native_SOLIDWORKS_2026/`、`Neutral_STEP/`、`Preview/` 和审计文本统一映射到 `model/`；两份设计文档映射到 `design/`。导入过程没有重建或另存 CAD，文件内容与原包完全一致。
 
-装配体配置名为 `ID150_NOMINAL`，包含两个显示状态：
+## 版本参数与核验范围
 
-- `ROBOT_ONLY`：默认状态，隐藏管道并显示完整机器人；
-- `WITH_PIPE`：显示透明的 ID150 mm 管道包络。
+原包审计记录为 118 个顶层组件、38 个独立零件，配置 `ID150_NOMINAL`，显示状态 `ROBOT_ONLY` / `WITH_PIPE`。主要包络为 φ60×28 mm 全向轮、150 mm 连杆轴距、25T/40T 齿轮副（32.5 mm 中心距）、92×64×30 mm 设备舱、50×48×32 mm 相机预留舱。
 
-装配体自定义属性记录了管径范围、轮子包络、150 mm 连杆轴距、108.757667° 标称 V 角、90°–125°机械限位、目标质量、速度和行程。
+本次核验原 ZIP 与仓库副本一致，并逐项核对 50 个导入文件。上述组件、显示状态和参数沿用包内记录；没有重新执行 SOLIDWORKS 打开、重建、实体干涉或加工验证。模型仍为概念包络，实物尺寸和制造细节应按原包说明后续完善。
 
-`GenerateSolidWorksConcept.cs` 是可重复生成 140–160 mm 姿态的参数源；`FinalizeSolidWorksAssembly.cs` 用于设置透明度、导出快照、审计组件并保存最终显示状态；`CreateGeneralArrangementDrawing.cs` 生成 A3 总布置工程图。`AuditSolidWorksInterferences.cs` 以只读方式执行实体干涉检查并主动关闭文档；`CheckSolidWorksCleanClose.cs` 验证普通打开后所有文档的 `SaveFlag` 均保持为假。工具的本地 `.exe` 和 SOLIDWORKS Interop DLL 属于构建产物，不纳入 Git。
+## 历史修订与生成工具
 
-`GenerateSolidWorksConcept.exe <新输出目录> 150 --enclosures-only` 可单独生成六件外壳。生成器会复用已有文件，因此几何修改后必须使用新的输出目录。`PublishPrintableEnclosure.cs` 将装配实际引用的零件复制并重定向到正式目录；`ExportPrintableEnclosureParts.cs` 检查实体、贯通孔并导出 STEP/STL；`CreatePrintableEnclosureDrawing.cs` 生成合盖/爆炸装配和七页图纸；`AuditEnclosureFastenerClearance.cs` 检查 12 只螺钉的杆、头包络；`verify_print_meshes.py` 检查 STL 毫米尺度、封闭性、连通性和平台方向。
+包含惰轮、六件打印外壳、127 个组件及 50 个唯一引用零件的版本，保留在 [历史提交 6ad9346](https://github.com/A123536/final-report/tree/6ad93463daccba81145dd6c9fa55dd463d4a2adb/cad/solidworks/model)。其零干涉记录及打印文件只适用于该历史版本。
 
-如图纸首次打开更新了引用缓存，`StabilizeSavedCadDocuments.exe <图纸路径> <授权model根目录>` 会按装配体、图纸的依赖顺序保存，随后重新打开验证；不会清空保存标志或关闭警告。最终仍需用 `CheckSolidWorksCleanClose.exe <文档路径>` 独立确认无临时/缺失引用且保存标志全部为假。
+本目录的 C# 生成器、导出器和验证工具保留原有实现，没有按本次 ZIP 回退。使用它们重新生成或保存模型可能改变当前基线；如需试验，请指定独立输出目录。工具的本地 `.exe` 和 SOLIDWORKS Interop DLL 仍属于忽略的构建产物。
