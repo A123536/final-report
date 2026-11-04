@@ -24,6 +24,12 @@
 - 目标巡航速度 `0.15 m/s`，目标管内行程 `10 m`，拖线总长 `15 m`。
 - 计划采用地面端 24 V 供电、机器人端 12 V/5 V 降压、STM32F411 控制和 RS-485 通信。
 
+## 新增传感器规划
+
+2026-11-04 新增[中心关节角度传感器方案](design/center_joint_angle_sensor.md)：计划使用一只绝对角度传感器监测两根连杆的相对夹角，预留 SPI2 的 PB12～PB15 接口，并纳入现有六任务 FreeRTOS 规划。文档包含安装原则、采购增补、采样与故障处理、标定和试验清单。
+
+这部分属于当前模型基线之外的设计增补，尚未集成进 CAD、IOC 或固件，也未完成实物验证。角度只能辅助判断姿态和估计压壁力，不能单独证明弹簧正常、三轮接触或无打滑；当前被动关节仍由双扭簧提供预紧。
+
 ## 仓库结构
 
 ```text
@@ -35,6 +41,7 @@ cad/
 design/
   basic_mechanical_scheme.md    机械方案与第二轮仿真结论
   assembly_and_procurement.md   装配、接线和采购建议
+  center_joint_angle_sensor.md  中心关节角度传感器与 RTOS 接入增补
 simulation/
   v_pipe_robot_sim.py           几何、压壁、牵引和不确定性计算
   results/                      CSV、JSON 和仿真图表
