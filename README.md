@@ -28,7 +28,13 @@
 
 2026-11-04 新增[中心关节角度传感器方案](design/center_joint_angle_sensor.md)：计划使用一只绝对角度传感器监测两根连杆的相对夹角，预留 SPI2 的 PB12～PB15 接口，并纳入现有六任务 FreeRTOS 规划。文档包含安装原则、采购增补、采样与故障处理、标定和试验清单。
 
-这部分属于当前模型基线之外的设计增补，尚未集成进 CAD、IOC 或固件，也未完成实物验证。角度只能辅助判断姿态和估计压壁力，不能单独证明弹簧正常、三轮接触或无打滑；当前被动关节仍由双扭簧提供预紧。
+角度传感器的 SPI2 接口预留已纳入下方配置阶段工程，具体模块驱动、CAD 安装设计与实物验证待完成。测角数据用于辅助观察机构姿态和估计压壁力，接触状态与扭簧健康需要结合其他测量和试验判断。
+
+## 嵌入式工程
+
+2026-11-06 收录[Final_project5配置阶段快照](firmware/Final_project5/README.md)，包含STM32F411的IOC、HAL/CMSIS、FreeRTOS和CMake工程。已配置双电机PWM、双编码器、ADC/DMA、RS-485、关节传感器SPI2接口及六任务框架。当前阶段的外设运行启动、任务业务、看门狗健康刷新及异常处理待完成，状态与构建方法见工程说明。
+
+配置目标与最新复查记录见[整机CubeMX配置清单](design/cubemx_full_system_configuration.md)。
 
 ## 仓库结构
 
@@ -42,6 +48,9 @@ design/
   basic_mechanical_scheme.md    机械方案与第二轮仿真结论
   assembly_and_procurement.md   装配、接线和采购建议
   center_joint_angle_sensor.md  中心关节角度传感器与 RTOS 接入增补
+  cubemx_full_system_configuration.md  整机 CubeMX 配置清单
+firmware/
+  Final_project5/               STM32F411 配置阶段 CMake/FreeRTOS 工程
 simulation/
   v_pipe_robot_sim.py           几何、压壁、牵引和不确定性计算
   results/                      CSV、JSON 和仿真图表
